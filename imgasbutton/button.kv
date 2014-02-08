@@ -1,0 +1,16 @@
+
+FloatLayout:
+    Button:
+        id: kill_button
+
+        # background_normal = Background image of the button used for the default graphical representation when the button is not pressed.
+        # To use an image for the appearance of the button, simply give the name of the file on the right side of the assignment.
+        background_normal: "red_button-1979px.png"
+
+        # Because the size for x and y are set for 50%, positioning x and y at 25% centers the button.
+        pos_hint: { 'x': .25, 'y': .25 }
+        size_hint_y: .5
+        size_hint_x: .5
+
+        # text will not be hidden by the image.
+        text: 'Kill'
