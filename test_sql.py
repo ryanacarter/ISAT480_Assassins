@@ -1,11 +1,14 @@
 import MySQLdb as mdb
 import sys
 
+uname = "rcarter"
+pword = ""
+
 db = mdb.connect("localhost","assassins","checkout","assassins");
 
 cur = db.cursor()
     
-sql = "SELECT * FROM users"
+sql = "SELECT * FROM users WHERE uid = 1"
 
 try:
     cur.execute(sql)
@@ -18,6 +21,11 @@ try:
         
         print "uid=%d, username=%s, password=%s" % \
              (uid, username, password )
+
+	if uname == username:
+		print "Username"
+	if pword == password:
+		print "password"
     
 except:
   
