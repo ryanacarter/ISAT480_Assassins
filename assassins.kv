@@ -1,0 +1,55 @@
+
+<LoginPage>:
+	
+	Label:
+    	text: 'Username:'
+		pos_hint: {'x': .07, 'y': .44}
+		size_hint_x: .2
+		size_hint_y: .05
+		font_size: 35
+		#color: 0, 0, 0, .5
+	
+	TextInput:
+		id: username
+		pos_hint: {'x': .35, 'y': .44}
+		size_hint_x: .6
+		size_hint_y: .05
+		font_size: 35
+		#color: [0, 0, 0, .5]
+		multiline: 0
+		
+	Label:
+    	text: 'Password:'
+		pos_hint: {'x': .08, 'y': .37}
+		size_hint_x: .2
+		size_hint_y: .05
+		font_size: 35
+		#color: 0, 0, 0, .5
+	
+	TextInput:
+		id:password
+		pos_hint: {'x': .35, 'y': .37}
+		size_hint_x: .6
+		size_hint_y: .05
+		font_size: 35
+		password: True
+		#color: 0, 0, 0, .5
+		
+	Label:
+		id:invalid_login
+		text: ''
+		color: [1, 1, 1, 1]
+	
+	Button:
+		text: 'Login'
+		pos_hint: {'x': .06, 'y': .26}
+		size_hint_x: .85
+		size_hint_y: .08
+		font_size: 35
+		on_release: root.login_button_function()
+		
+		
+		
+		
+		
+		
