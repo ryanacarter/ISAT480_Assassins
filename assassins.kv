@@ -55,6 +55,17 @@
 		size_hint_y: .08
 		font_size: 35
 		on_release: root.login_button_function()
+
+	Button:
+		text: 'Sign Up'
+		id: 'NewUserBtn'
+		pos_hint: {'x': .06, 'y': .15}
+		size_hint_x: .85
+		size_hint_y: .08
+		font_size: 20
+		on_release: root.manager.current = root.manager.next()
+
+	
 		
 		
 		

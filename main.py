@@ -9,7 +9,7 @@ from kivy.uix.widget import Widget
 import pprint
 import MySQLdb as mdb
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
+from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
 
 Builder.load_file('assassins.kv')
 
@@ -60,39 +60,39 @@ class LoginScreen(Screen, FloatLayout):
         # Varifies the user login information
         def login_button_function(self):
 
-                                # gets the data from the text inputs on the login page
-                                username = self.ids['username']
-                                password = self.ids['password']
-                                invalid = self.ids['invalid_login']
-                
-                                # make sure that the values are not null
-                                if len(username.text) > 0:
-                                        invalid.text = ""
-                                        if len(password.text) > 0:
-                                                varify = self.check_login_info(username.text, password.text);
-                                                if(varify == 0):
-                                                        invalid.text = "Connection not Avalible"
-                                                elif(varify == 1):
-                                                        sm.current = 'NewUser'
-                                                elif(varify == 2):
-                                                        invalid.text = "Invalid Username"
-                                                        username.text = ""
-                                                elif(varify == 3):
-                                                        invalid.text = "Invalid Password"
-                                                        password.text = ""
-                                                else:
-                                                        invalid.text = "Unable to login"
-                                        else:
-                                                invalid.text = "Please enter a password"
-                                else:
-                                        invalid.text = "Please enter a username"
+                # gets the data from the text inputs on the login page
+                username = self.ids['username']
+                password = self.ids['password']
+                invalid = self.ids['invalid_login']
 
-sm = ScreenManager(transition=NoTransition())
-sm.add_widget(LoginScreen(name='Login'))
-sm.add_widget(NewUserScreen(name='NewUser'))
+                # make sure that the values are not null
+                if len(username.text) > 0:
+                        invalid.text = ""
+                        if len(password.text) > 0:
+                                varify = self.check_login_info(username.text, password.text);
+                                if(varify == 0):
+                                        invalid.text = "Connection not Avalible"
+                                elif(varify == 1):
+                                        sm.switch_to(NewUserScreen)
+                                        sm.cls(LoginScreen)
+                                elif(varify == 2):
+                                        invalid.text = "Invalid Username"
+                                        username.text = ""
+                                elif(varify == 3):
+                                        invalid.text = "Invalid Password"
+                                        password.text = ""
+                                else:
+                                        invalid.text = "Unable to login"
+                        else:
+                                invalid.text = "Please enter a password"
+                else:
+                        invalid.text = "Please enter a username"
 
 class AssassinsApp(App):
         def build(self):
+                sm = ScreenManager(transition=SlideTransition(), direction = "up")
+                sm.add_widget(LoginScreen(name='Login'))
+                sm.add_widget(LoginScreen(name='Login2'))
                 return sm
         
 
