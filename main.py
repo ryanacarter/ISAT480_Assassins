@@ -25,10 +25,13 @@ class NewUserScreen(Screen, FloatLayout):
 class LoginScreen(Screen, FloatLayout):
 
         def check_login_info(self, uname, pword):
-                
-                # create the database connection
-                db = mdb.connect("localhost", "assassins", "checkout", "assassins");
 
+                try:
+                        # create the database connection
+                        db = mdb.connect("192.168.1.2", "assassins", "checkout", "assassins");
+                except:
+                        return(0)
+                
                 # set the cursor to extract the data
                 cur = db.cursor()
                 
@@ -55,7 +58,7 @@ class LoginScreen(Screen, FloatLayout):
 
                 except:
                         db.close()
-                        return(0)
+                        return(1)
         
         # Varifies the user login information
         def login_button_function(self):
@@ -93,8 +96,6 @@ class LoginScreen(Screen, FloatLayout):
 sm = ScreenManager()
 sm.add_widget(LoginScreen(name='Login'))
 sm.add_widget(NewUserScreen(name='NewUser'))
-
-
 
 class AssassinsApp(App):
         def build(self):
