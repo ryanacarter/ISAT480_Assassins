@@ -26,11 +26,8 @@ class LoginScreen(Screen, FloatLayout):
 
         def check_login_info(self, uname, pword):
 
-                try:
-                        # create the database connection
-                        db = mdb.connect("192.168.1.2", "assassins", "checkout", "assassins");
-                except:
-                        return(0)
+                # create the database connection
+                db = mdb.connect("192.168.1.2", "assassins", "checkout", "assassins");
                 
                 # set the cursor to extract the data
                 cur = db.cursor()
