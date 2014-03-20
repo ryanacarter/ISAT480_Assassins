@@ -14,3 +14,34 @@ FloatLayout:
 
         # text will not be hidden by the image.
         text: 'Kill'
+
+	Button:
+		id: back_button
+		text: 'Back'
+		pos_hint: { 'x': 0, 'y': .9 }
+		size_hint_y: .1
+		size_hint_x: .2
+
+	Label:
+		id: game_number
+		text: 'Game 1'
+		font_size: 40
+		pos_hint: { 'x': .4, 'y': .9 }
+		size_hint_y: .1
+		size_hint_x: .2
+
+	Label:
+		id: target_name
+		text: 'Target: Ryan'
+		font_size: 30
+		pos_hint: { 'x': .1, 'y': .8 }
+		size_hint_y: .1
+		size_hint_x: .2
+
+	Label:
+		id:players_remaining
+		text: 'Players Remaining: '
+		font_size: 30
+		pos_hint: { 'x': .5, 'y': .06 }
+		size_hint_y: .1
+		size_hint_x: .2
