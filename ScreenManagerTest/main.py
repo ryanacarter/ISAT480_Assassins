@@ -1,31 +1,19 @@
-# Import all of the files need to run the Kivy application in Python.
 import kivy
 
 from kivy.app import App
-from kivy.uix.floatlayout import FloatLayout
-from kivy.uix.boxlayout import BoxLayout
 from kivy.config import Config
 from kivy.uix.widget import Widget
-import pprint
-import MySQLdb as mdb
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
+from kivy.uix.screenmanager import ScreenManager, Screen
+import MySQLdb as mdb
 
-Builder.load_file('assassins.kv')
-
-# Set the default size of the window to the resolution of an iPhone5 Screen.
-#Config.set('graphics', 'width', '640')
-#Config.set('graphics', 'height', '1136')
+Builder.load_file('ScreenManager.kv')
 
 class NewUserScreen(Screen):
-
-        def createUser(self):
-                return()
+    pass
 
 class LoginScreen(Screen):
-
         def check_login_info(self, uname, pword):
-
                 # create the database connection
                 db = mdb.connect("localhost", "assassins", "checkout", "assassins");
                 
@@ -86,17 +74,16 @@ class LoginScreen(Screen):
                                 invalid.text = "Please enter a password"
                 else:
                         invalid.text = "Please enter a username"
-                
 
-
-
-class AssassinsApp(App):
-        def build(self):
-                root = ScreenManager()
-                root.add_widget(LoginScreen(name='Login'))
-                root.add_widget(NewUserScreen(name='NewUser'))
-
-                return root
+class ScreenManagerApp (App):
+    def build (self):
+        root = ScreenManager()
+        root.add_widget(LoginScreen(name='Login'))
+        root.add_widget(NewUserScreen(name='NewUser'))
+        
+        return root
 
 if __name__ == '__main__':
-        AssassinsApp().run()
+    ScreenManagerApp().run()
+        
+

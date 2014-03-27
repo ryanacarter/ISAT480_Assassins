@@ -2,6 +2,7 @@ Button:
 	
 
 <NewUserScreen>:
+
     FloatLayout:
 		
         GridLayout:
@@ -41,62 +42,62 @@ Button:
 				on_release: root.manager.current = 'Login'
 
 <LoginScreen>:
+	FloatLayout:
 	
-	Label:
-		text: 'Username:'
-		pos_hint: {'x': .07, 'y': .44}
-		size_hint_x: .2
-		size_hint_y: .05
-		font_size: 35
-		#color: 0, 0, 0, .5
+		Label:
+			text: 'Username:'
+			pos_hint: {'x': .07, 'y': .44}
+			size_hint_x: .2
+			size_hint_y: .05
+			font_size: 35
+			#color: 0, 0, 0, .5
 	
-	TextInput:
-		id: username
-		pos_hint: {'x': .35, 'y': .44}
-		size_hint_x: .6
-		size_hint_y: .05
-		font_size: 35
-		#color: [0, 0, 0, .5]
-		multiline: 0
+		TextInput:
+			id: username
+			pos_hint: {'x': .35, 'y': .44}
+			size_hint_x: .6
+			size_hint_y: .05
+			font_size: 35
+			#color: [0, 0, 0, .5]
+			multiline: 0
 		
-	Label:
-		text: 'Password:'
-		pos_hint: {'x': .08, 'y': .37}
-		size_hint_x: .2
-		size_hint_y: .05
-		font_size: 35
-		#color: 0, 0, 0, .5
+		Label:
+			text: 'Password:'
+			pos_hint: {'x': .08, 'y': .37}
+			size_hint_x: .2
+			size_hint_y: .05
+			font_size: 35
+			#color: 0, 0, 0, .5
 	
-	TextInput:
-		id:password
-		pos_hint: {'x': .35, 'y': .37}
-		size_hint_x: .6
-		size_hint_y: .05
-		font_size: 35
-		password: True
-		#color: 0, 0, 0, .5
+		TextInput:
+			id:password
+			pos_hint: {'x': .35, 'y': .37}
+			size_hint_x: .6
+			size_hint_y: .05
+			font_size: 35
+			password: True
+			#color: 0, 0, 0, .5
 		
-	Label:
-		id:invalid_login
-		text: ''
-		color: [1, 1, 1, 1]
+		Label:
+			id:invalid_login
+			text: ''
+			color: [1, 1, 1, 1]
 	
-	Button:
-		text: 'Login'
-		pos_hint: {'x': .06, 'y': .26}
-		size_hint_x: .85
-		size_hint_y: .08
-		font_size: 35
-		on_release: root.manager.current = root.manager.next()
+		Button:
+			text: 'Login'
+			pos_hint: {'x': .06, 'y': .26}
+			size_hint_x: .85
+			size_hint_y: .08
+			font_size: 35
 
-	Button:
-		text: 'Sign Up'
-		id: 'NewUserBtn'
-		pos_hint: {'x': .06, 'y': .15}
-		size_hint_x: .85
-		size_hint_y: .08
-		font_size: 20
-		on_release: root.manager.current = 'NewUser'
+		Button:
+			text: 'Sign Up'
+			id: 'NewUserBtn'
+			pos_hint: {'x': .06, 'y': .15}
+			size_hint_x: .85
+			size_hint_y: .08
+			font_size: 20
+			on_release: root.manager.current = 'NewUser' 
 
 <GamePlay>
 		
