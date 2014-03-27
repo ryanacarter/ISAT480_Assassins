@@ -86,18 +86,17 @@ class LoginScreen(Screen, FloatLayout):
                                 invalid.text = "Please enter a password"
                 else:
                         invalid.text = "Please enter a username"
+                
 
-        def new_user_function(self):
-                sm.switch_to(NewUserScreen())
 
-sm = ScreenManager()
-sm.add_widget(LoginScreen(name='Login'))
-sm.add_widget(NewUserScreen(name='NewUser'))
 
 class AssassinsApp(App):
         def build(self):
-                return sm
-        
+                root = ScreenManager()
+                root.add_widget(LoginScreen(name='Login'))
+                root.add_widget(NewUserScreen(name='NewUser'))
+
+                return root
 
 if __name__ == '__main__':
         AssassinsApp().run()
