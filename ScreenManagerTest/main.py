@@ -22,8 +22,8 @@ class NewUserScreen(Screen):
 		uname = self.ids['uname_input'].text
 		pword= self.ids['pword_input'].text
 
-		
-		results = create("INSERT INTO users (\"firstname\", \"lastname\", \"username\", \"password\") VALUES (\"%s%\", \"%s%\", \"%s%\", \"%s%\" % (first,last,uname,pword))")
+		results = create("INSERT INTO users (firstname, lastname, username, password) VALUES ('%s','%s','%s','%s')" % (first,last,uname,pword))
+		#results = create("INSERT INTO users ('firstname', 'lastname', 'username', 'password') VALUES (\"%s%\", \"%s%\", \"%s%\", \"%s%\") % first,last,uname,pword")
 		#results = create("INSERT INTO users (\"firstname\", \"lastname\", \"username\", \"password\") VALUES ('first', 'last', 'uname', 'pword')")
 		#results = create("INSERT INTO users (\"firstname\", \"lastname\", \"username\", \"password\") VALUES (" + first + ',' + last + ',' + uname + ',' + pword + ")")
 		
@@ -35,6 +35,9 @@ class NewUserScreen(Screen):
                         popup = Popup(title='Sorry :(', content=Label(text='Didnt register'), size_hint=(None, None), size=(400, 100))
                         self.ids['uname_input'].text = ""
                         popup.open()
+                elif results == 2:
+					popup = Popup(title='Sorry :(', content=Label(text='Didnt connect'), size_hint=(None, None), size=(400, 100))
+					popup.open()
                         
                 
 class LoginScreen(Screen):
@@ -97,11 +100,13 @@ def create (sql):
                 cur = db.cursor()
                 try:
                         cur.execute(sql)
+						db.commit()
                         return(1)
                 except:
+						db.rollback()
                         return(0)
         except:
-                return(0)
+                return(2)
 
 class ScreenManagerApp (App):
 	def build (self):   
