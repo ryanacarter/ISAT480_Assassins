@@ -1,95 +1,66 @@
 <NewUserScreen>:
-	FloatLayout:
-		
-		GridLayout:
-			cols: 2
-			size_hint: .5, None
-			height: 150
-			spacing: 10
-			row_default_height: 40
-			pos_hint: {'center_x': .5, 'center_y': .5}
+    FloatLayout:
+            
+        GridLayout:
+            cols: 2
+            size_hint: .5, None
+            height: 150
+            spacing: 10
+            row_default_height: 40
+            pos_hint: {'center_x': .5, 'center_y': .5}
 
-			Label:
-				text:'First Name:'
-			TextInput:
-				id:'fname_input:'
-				size_hint_x: None
-				width: 220
-			Label:
-				text:'Last Name:'
-			TextInput:
-				id:'lname_input:'
-				size_hint_x: None
-				width: 220
-			Label:
-				text:'Username:'
-			TextInput:
-				id:'uname_input'
-				size_hint_x: None
-				width: 220
-			Label:
-				text:'Password'
-			TextInput:
-				id:'pword_input'
-				size_hint_x: None
-				width: 220
+            Label:
+                text:'First Name:'
+            TextInput:
+                id:fname_input
+                size_hint_x: None
+                width: 220
+            Label:
+                text:'Last Name:'
+            TextInput:
+                id:lname_input
+                size_hint_x: None
+                width: 220
+            Label:
+                text:'Username:'
+            TextInput:
+                id:uname_input
+                size_hint_x: None
+                width: 220
+            Label:
+                text:'Password'
+            TextInput:
+                id:pword_input
+                size_hint_x: None
+                width: 220
+            Button:
+                text: 'Go Back'
+                id:'LoginButton'
+                on_press:root.manager.current = 'Login'
+            Button:
+                text: 'Get Started'
+                id: 'GetStarted'
+                on_press: root.GetStarted()
 
 
 <LoginScreen>:
-	FloatLayout:
-	
-		Label:
-			text: 'Username:'
-			pos_hint: {'x': .07, 'y': .44}
-			size_hint_x: .2
-			size_hint_y: .05
-			font_size: 35
-			#color: 0, 0, 0, .5
-	
-		TextInput:
-			id: username
-			pos_hint: {'x': .35, 'y': .44}
-			size_hint_x: .6
-			size_hint_y: .05
-			font_size: 35
-			#color: [0, 0, 0, .5]
-			multiline: 0
-		
-		Label:
-			text: 'Password:'
-			pos_hint: {'x': .08, 'y': .37}
-			size_hint_x: .2
-			size_hint_y: .05
-			font_size: 35
-			#color: 0, 0, 0, .5
-	
-		TextInput:
-			id:password
-			pos_hint: {'x': .35, 'y': .37}
-			size_hint_x: .6
-			size_hint_y: .05
-			font_size: 35
-			password: True
-			#color: 0, 0, 0, .5
-		
-		Label:
-			id:invalid_login
-			text: ''
-			color: [1, 1, 1, 1]
-	
-		Button:
-			text: 'Login'
-			pos_hint: {'x': .06, 'y': .26}
-			size_hint_x: .85
-			size_hint_y: .08
-			font_size: 35
-			on_press: root.login_button_function()
 
-		Button:
-			text: 'Sign Up'
-			id: 'NewUserBtn'
-			pos_hint: {'x': .06, 'y': .15}
-			size_hint_x: .85
-			size_hint_y: .08
-			font_size: 20
-			on_press: root.manager.current = 'NewUser' 
+    GridLayout:
+        cols: 2
+        size_hint: .8, .5
+        pos_hint: {'center_x':.5, 'center_y': .5}
+        default_row_height: 20
+        Button:
+            text: 'Username'
+            width: 100
+        TextInput:
+            id: 'username_input'
+        Label:
+            text: 'Password'
+        TextInput:
+            id: 'password_input'
+
+<ErrorScreen>:
+
+    FloatLayout:
+        pos_hint: {'center_x': .5, 'center_y': .5}
