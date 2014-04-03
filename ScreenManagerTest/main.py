@@ -23,9 +23,6 @@ class NewUserScreen(Screen):
 		pword= self.ids['pword_input'].text
 
 		results = create("INSERT INTO users (firstname, lastname, username, password) VALUES ('%s','%s','%s','%s')" % (first,last,uname,pword))
-		#results = create("INSERT INTO users ('firstname', 'lastname', 'username', 'password') VALUES (\"%s%\", \"%s%\", \"%s%\", \"%s%\") % first,last,uname,pword")
-		#results = create("INSERT INTO users (\"firstname\", \"lastname\", \"username\", \"password\") VALUES ('first', 'last', 'uname', 'pword')")
-		#results = create("INSERT INTO users (\"firstname\", \"lastname\", \"username\", \"password\") VALUES (" + first + ',' + last + ',' + uname + ',' + pword + ")")
 		
                 if results == 1:
                         popup = Popup(title='Congratulations', content=Label(text='Thank you, please sign in'), size_hint=(None, None), size=(400, 100))
@@ -100,10 +97,10 @@ def create (sql):
                 cur = db.cursor()
                 try:
                         cur.execute(sql)
-						db.commit()
+			db.commit()
                         return(1)
                 except:
-						db.rollback()
+			db.rollback()
                         return(0)
         except:
                 return(2)
