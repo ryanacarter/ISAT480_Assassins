@@ -1,4 +1,4 @@
-<NewUserScreen>
+<NewUserScreen>:
 
     FloatLayout:
 		
@@ -41,7 +41,7 @@
                 id:'execute'
                 on_press: root.GetStarted()
 
-<LoginScreen>
+<LoginScreen>:
 
     canvas:
         Rectangle:
@@ -112,21 +112,10 @@
             font_size: 20
             on_release: root.manager.current = 'NewUser' 
 
-<UsersScreen>
+<UsersScreen>:
 
-    GridLayout:
-        cols: 3
-        pos_hint: { 'center_x': .5, 'center_y': .5}
-        size: root.width/2, 100
-        row_force_default: True
-        row_default_height: 100
-        col_default_width: self.width / 3
-        Button:
-            text: 'it worked!'
-        Button:
-            text: '2'
-        Button:
-            text: '3'      
+		
+		
 		
 		
 		

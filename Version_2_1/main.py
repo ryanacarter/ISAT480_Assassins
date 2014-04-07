@@ -5,13 +5,12 @@ from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.popup import Popup
 from kivy.uix.label import Label
-from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
 import MySQLdb as mdb
 
 Builder.load_file('assassins.kv')
 
-class UsersScreen(Screen, FloatLayout):
+class UsersScreen(Screen):
 	pass
 
 class NewUserScreen(Screen):
@@ -68,12 +67,6 @@ class LoginScreen(Screen):
                                         popup.open()
                                                         
 
-
-root = ScreenManager()
-root.add_widget(LoginScreen(name='Login'))
-root.add_widget(NewUserScreen(name='NewUser'))
-root.add_widget(UsersScreen(name='UsersScreen'))
-
 def retrieve (sql):
         try:
                 db = mdb.connect("localhost", "assassins", "checkout", "assassins");
@@ -107,7 +100,11 @@ def create (sql):
                 return(2)
 
 class assassinsApp (App):
-	def build (self):   
+	def build (self):    
+                root = ScreenManager()
+                root.add_widget(LoginScreen(name='Login'))
+                root.add_widget(NewUserScreen(name='NewUser'))
+                root.add_widget(UsersScreen(name='UsersScreen'))
 		return root
 
 	
