@@ -41,25 +41,26 @@
         Label:
             text:'First Name'
         TextInput:
-            id:'first_input'
+            id:first_input
         Label:
             text:'Last Name'
         TextInput:
-            id:'last_input'
+            id:last_input
         Label:
             text:'Username'
             size_hint_y:.2
         TextInput:
-            id:'uname_input'
+            id:uname_input
         Label:
             text:'Password'
         TextInput:
-            id:'pass_input'
+            id:pass_input
         Button:
             text:'Go Back'
             on_press: root.goback()
         Button:
             text:'Get Started'
+            on_press:root.GetStarted()
 
 <UsersHomeScreen>
     Button:

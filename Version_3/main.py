@@ -7,7 +7,8 @@ from kivy.uix.popup import Popup
 from kivy.uix.label import Label
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
-import MySQLdb as mdb
+import mysql.connector
+from mysql.connector import errorcode
 
 Builder.load_file('assassins.kv')
 
@@ -18,6 +19,26 @@ class NewUserScreen(FloatLayout):
         def goback(self):
                 root.remove_widget(newuser)
                 root.add_widget(login)
+
+        def GetStarted(self):
+		first = self.ids['first_input'].text
+		last = self.ids['last_input'].text
+		uname = self.ids['uname_input'].text
+		pword= self.ids['pass_input'].text
+
+		results = root.create("INSERT INTO users (firstname, lastname, username, password) VALUES ('%s','%s','%s','%s')" % (first,last,uname,pword))
+		
+                if results == 1:
+                        popup = Popup(title='Congratulations', content=Label(text='Thank you, please sign in'), size_hint=(None, None), size=(400, 100))
+                        root.switch_to(LoginScreen())
+                        popup.open()
+                elif results == 0:
+                        popup = Popup(title='Sorry :(', content=Label(text='Didnt register'), size_hint=(None, None), size=(400, 100))
+                        self.ids['uname_input'].text = ""
+                        popup.open()
+                elif results == 2:
+                        popup = Popup(title='Sorry :(', content=Label(text='Didnt connect'), size_hint=(None, None), size=(400, 100))
+                        popup.open()
 
 class LoginScreen(FloatLayout):
         def changeScreen(self):
@@ -60,33 +81,51 @@ class RootWidget(FloatLayout):
 
         def retrieve (self, sql):
                 try:
-                        db = mdb.connect("localhost", "assassins", "checkout", "assassins");
-                        # set the cursor to extract the data
-                        cur = db.cursor()
 
-                        try:
-                                cur.execute(sql)
-                                results = cur.fetchall()
-                                if len(results) == 0:
-                                        return (1)
-                                else:
-                                        return cur.fetchall()
-                        except:
-                                return(1)
-                except:
+                        cnx = mysql.connector.connect(user='root', password='checkout', host='192.168.1.118', database='assassins')
+
+                        # set the cursor to extract the data
+                        cur = cnx.cursor()
+                        cur.execute(sql)
+                        
+                        results = cur.fetchall()
+
+                        print results
+                        
+                        if len(results) == 0:
+                                return (0)
+                        else:
+                                return (2)
+
+                except mysql.connector.Error as err:
+                        if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+                                print("Something is wrong with your user name or password")
+                                return(0)
+                        elif err.errno == errorcode.ER_BAD_DB_ERROR:
+                                print("Database does not exists")
+                                return(0)
+                        else:
+                                print(err)
+                else:
+                        cnx.close()
                         return(0)
 
         def create (self, sql):
                 try:
-                        db = mdb.connect("localhost", "assassins", "checkout", "assassins");
-                        cur = db.cursor()
+                        cnx = mysql.connector.connect(user='root', password='checkout', host='127.0.0.1', database='assassins')
+
                         try:
                                 cur.execute(sql)
-                                db.commit()
+                                cnx.commit()
+
+                                cursor.close()
+                                cnx.close()
                                 return(1)
                         except:
-                                db.rollback()
+                                cursor.close()
+                                cnx.close()
                                 return(0)
+
                 except:
                         return(2)
 
