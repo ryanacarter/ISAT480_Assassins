@@ -5,24 +5,37 @@ from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.popup import Popup
 from kivy.uix.label import Label
+from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
 import MySQLdb as mdb
 
-Builder.load_file('assassins.kv')                                                     
+Builder.load_file('assassins.kv')
 
-class Assassins(ScreenManager):
+class UsersHomeScreen(FloatLayout):
+        pass
+
+class NewUserScreen(FloatLayout):
+        def goback(self):
+                root.remove_widget(newuser)
+                root.add_widget(login)
+
+class LoginScreen(FloatLayout):
+        def changeScreen(self):
+                root.remove_widget(login)
+                root.add_widget(newuser)
+
+
         # Varifies the user login information
-        def login_button_function(self):
+        def login_but(self):
 
                 # gets the data from the text inputs on the login page
-                username = self.ids['username']
-                password = self.ids['password']
-                invalid = self.ids['invalid_login']
+                username = self.ids['uname_input']
+                password = self.ids['pass_input']
 
                 # make sure that the values are not null
                 if len(username.text) > 0:
                         if len(password.text) > 0:
-                                query = self.retrieve("SELECT * FROM users WHERE username = \"%s\" AND password = \"%s\"" % (username.text, password.text))
+                                query = root.retrieve("SELECT * FROM users WHERE username = \"%s\" AND password = \"%s\"" % (username.text, password.text))
                                 if query == 1:
                                         popup = Popup(title='Invalid Credentials', content=Label(text='Username or Password is Incorrect'), size_hint=(None, None), size=(400, 100))
                                         popup.open()
@@ -30,7 +43,8 @@ class Assassins(ScreenManager):
                                         popup = Popup(title='Connection', content=Label(text='Could not connect to the database'), size_hint=(None, None), size=(400, 100))
                                         popup.open()
                                 else:
-                                        root.switch_to(UsersScreen())
+                                        root.remove_widget(login)
+                                        root.add_widget(home)
                         else:
                                 popup = Popup(title='Invalid Credentials', content=Label(text='Please Enter a Password'), size_hint=(None, None), size=(400, 100))
                                 popup.open()
@@ -38,24 +52,11 @@ class Assassins(ScreenManager):
                         popup = Popup(title='Invalid Credentials', content=Label(text='Please Enter a Username'), size_hint=(None, None), size=(400, 100))
                         popup.open()
 
-        def GetStarted(self):
-		first = self.ids['fname_input'].text
-		last = self.ids['lname_input'].text
-		uname = self.ids['uname_input'].text
-		pword= self.ids['pword_input'].text
+        def signup(self):
+                root.remove_widget(login)
+                root.add_widget(newuser)
 
-		results = self.create("INSERT INTO users (firstname, lastname, username, password) VALUES ('%s','%s','%s','%s')" % (first,last,uname,pword))
-		
-                if results == 1:
-                        popup = Popup(title='Congratulations', content=Label(text='Thank you, please sign in'), size_hint=(None, None), size=(400, 100))
-                        popup.open()
-                elif results == 0:
-                        popup = Popup(title='Sorry :(', content=Label(text='Didnt register'), size_hint=(None, None), size=(400, 100))
-                        self.ids['uname_input'].text = ""
-                        popup.open()
-                elif results == 2:
-                        popup = Popup(title='Sorry :(', content=Label(text='Didnt connect'), size_hint=(None, None), size=(400, 100))
-                        popup.open()
+class RootWidget(FloatLayout):
 
         def retrieve (self, sql):
                 try:
@@ -89,13 +90,22 @@ class Assassins(ScreenManager):
                 except:
                         return(2)
 
-class AssassinsApp (App):
-	def build (self):   
-		return Assassins()
+
+                
+root = RootWidget()
+login = LoginScreen()
+newuser = NewUserScreen()
+home = UsersHomeScreen()
+        
+class assassinsApp (App):
+	def build (self):
+                root.add_widget(login)
+                
+		return root
 
 	
 
 if __name__ == '__main__':
-	AssassinsApp().run()
+	assassinsApp().run()
 		
 
