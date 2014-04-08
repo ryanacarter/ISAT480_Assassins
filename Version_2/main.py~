@@ -11,7 +11,7 @@ import MySQLdb as mdb
 
 Builder.load_file('assassins.kv')
 
-class UsersHomeScreen(Screen, FloatLayout):
+class UsersScreen(Screen, FloatLayout):
 	pass
 
 class NewUserScreen(Screen):
@@ -59,7 +59,7 @@ class LoginScreen(Screen):
                                                         popup = Popup(title='Connection', content=Label(text='Could not connect to the database'), size_hint=(None, None), size=(400, 100))
                                                         popup.open()
                                                 else:
-							root.add_widget(UsersHomeScreen('users'))
+							root.add_widget(UsersScreen('users'))
                                                         root.switch_to(UsersScreen())
 							root.remove_widget(users)
                                         else:

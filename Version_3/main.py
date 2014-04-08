@@ -30,10 +30,11 @@ class NewUserScreen(FloatLayout):
 		
                 if results == 1:
                         popup = Popup(title='Congratulations', content=Label(text='Thank you, please sign in'), size_hint=(None, None), size=(400, 100))
-                        root.switch_to(LoginScreen())
+                        root.remove_widget(newuser)
+                        root.add_widget(login)
                         popup.open()
                 elif results == 0:
-                        popup = Popup(title='Sorry :(', content=Label(text='Didnt register'), size_hint=(None, None), size=(400, 100))
+                        popup = Popup(title='Sorry :(', content=Label(text='Your username is already in use'), size_hint=(None, None), size=(400, 100))
                         self.ids['uname_input'].text = ""
                         popup.open()
                 elif results == 2:
@@ -50,21 +51,24 @@ class LoginScreen(FloatLayout):
         def login_but(self):
 
                 # gets the data from the text inputs on the login page
-                username = self.ids['uname_input']
-                password = self.ids['pass_input']
+                uname = self.ids['uname_input']
+                pword = self.ids['pass_input']
 
                 # make sure that the values are not null
-                if len(username.text) > 0:
-                        if len(password.text) > 0:
-                                query = root.retrieve("SELECT * FROM users WHERE username = \"%s\" AND password = \"%s\"" % (username.text, password.text))
-                                if query == 1:
+                if len(uname.text) > 0:
+                        if len(pword.text) > 0:
+                                query = root.retrieve("SELECT * FROM users WHERE username = \"%s\" AND password = \"%s\"" % (uname.text, pword.text))
+                                if query == "":
                                         popup = Popup(title='Invalid Credentials', content=Label(text='Username or Password is Incorrect'), size_hint=(None, None), size=(400, 100))
                                         popup.open()
                                 elif query == 0:
                                         popup = Popup(title='Connection', content=Label(text='Could not connect to the database'), size_hint=(None, None), size=(400, 100))
                                         popup.open()
                                 else:
+                                        uid, firstname, lastname, username, password, game = query[0]
+                                        loggedinuser = username
                                         root.remove_widget(login)
+                                        home.ids['uname_label'].text = "Welcome back %s" % (firstname)
                                         root.add_widget(home)
                         else:
                                 popup = Popup(title='Invalid Credentials', content=Label(text='Please Enter a Password'), size_hint=(None, None), size=(400, 100))
@@ -82,20 +86,13 @@ class RootWidget(FloatLayout):
         def retrieve (self, sql):
                 try:
 
-                        cnx = mysql.connector.connect(user='root', password='checkout', host='192.168.1.118', database='assassins')
+                        cnx = mysql.connector.connect(user='assassins', password='checkout', host=ip, database='assassins')
 
                         # set the cursor to extract the data
                         cur = cnx.cursor()
                         cur.execute(sql)
                         
-                        results = cur.fetchall()
-
-                        print results
-                        
-                        if len(results) == 0:
-                                return (0)
-                        else:
-                                return (2)
+                        return cur.fetchall()
 
                 except mysql.connector.Error as err:
                         if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
@@ -112,30 +109,33 @@ class RootWidget(FloatLayout):
 
         def create (self, sql):
                 try:
-                        cnx = mysql.connector.connect(user='root', password='checkout', host='127.0.0.1', database='assassins')
+                        cnx = mysql.connector.connect(user='assassins', password='checkout', host=ip, database='assassins')
 
-                        try:
-                                cur.execute(sql)
-                                cnx.commit()
+                        cur = cnx.cursor()        
+                        cur.execute(sql)
+                        cnx.commit()
 
-                                cursor.close()
-                                cnx.close()
-                                return(1)
-                        except:
-                                cursor.close()
-                                cnx.close()
+                        cur.close()
+                        cnx.close()
+                        return(1)
+
+                except mysql.connector.Error as err:
+                        if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+                                print("Something is wrong with your user name or password")
+                                return(2)
+                        elif err.errno == errorcode.ER_BAD_DB_ERROR:
+                                print("Database does not exists")
+                                return(2)
+                        else:
+                                print(err)
                                 return(0)
 
-                except:
-                        return(2)
-
-
-                
 root = RootWidget()
 login = LoginScreen()
 newuser = NewUserScreen()
 home = UsersHomeScreen()
-        
+ip = '192.168.1.111'
+
 class assassinsApp (App):
 	def build (self):
                 root.add_widget(login)

@@ -11,10 +11,11 @@
 <LoginScreen>
 
     GridLayout:
-        pos_hint:{'center_x':.5, 'center_y':.5}
+        pos_hint:{'center_x':.5, 'center_y':.35}
         row_default_height: 5
-        size_hint: .8, .3
+        size_hint: .9, .2
         cols:2
+        spacing: 5
         Label:
             text:'Username'
             size_hint_y:.2
@@ -22,6 +23,7 @@
             id:uname_input
         Label:
             text:'Password'
+            size_hint_y:.2
         TextInput:
             id:pass_input
             password: True
@@ -36,7 +38,7 @@
     GridLayout:
         pos_hint:{'center_x':.5, 'center_y':.5}
         row_default_height: 5
-        size_hint: .8, .4
+        size_hint: .9, .4
         cols:2
         Label:
             text:'First Name'
@@ -63,6 +65,24 @@
             on_press:root.GetStarted()
 
 <UsersHomeScreen>
-    Button:
-        text:"THANK GOD!!!!"
+    Label:
+        id:uname_label
+        pos_hint:{'center_x':.5, 'center_y':.95}
+        color: 192, 192, 192, .9
+    GridLayout:
         pos_hint:{'center_x':.5, 'center_y':.5}
+        spacing:15
+        cols:1
+        size_hint:.9, .6
+        Button:
+            text:'Current Game'
+            color: 0,0,0,1
+            background_color: 192, 192, 192, .6
+        Button:
+            text:'Create New Game'
+            color: 0,0,0,1
+            background_color: 192, 192, 192, .6
+        Button:
+            text:'All Games'
+            color: 0,0,0,1
+            background_color: 192, 192, 192, .6
