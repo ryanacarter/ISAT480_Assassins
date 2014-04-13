@@ -113,6 +113,7 @@ class RootWidget(FloatLayout):
 
                         cur = cnx.cursor()        
                         cur.execute(sql)
+
                         cnx.commit()
 
                         cur.close()
@@ -129,12 +130,14 @@ class RootWidget(FloatLayout):
                         else:
                                 print(err)
                                 return(0)
+                except:
+                        return (2)
 
 root = RootWidget()
 login = LoginScreen()
 newuser = NewUserScreen()
 home = UsersHomeScreen()
-ip = '192.168.1.111'
+ip = '192.168.1.73'
 
 class assassinsApp (App):
 	def build (self):
