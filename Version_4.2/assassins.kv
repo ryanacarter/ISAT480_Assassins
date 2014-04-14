@@ -1,0 +1,134 @@
+<RootWidget>
+    canvas:
+        Rectangle:
+            source:'pictures/background.jpg'
+            size:self.size
+        Rectangle:
+            source:'pictures/creed.png'
+            size: self.width / 1,  self.height / 2
+            pos: 0, 450
+            
+<LoginScreen>
+
+    GridLayout:
+        pos_hint:{'center_x':.5, 'center_y':.35}
+        row_default_height: 5
+        size_hint: .9, .2
+        cols:2
+        spacing: 5
+        Label:
+            text:'Username'
+            size_hint_y:.2
+        TextInput:
+            id:uname_input
+        Label:
+            text:'Password'
+            size_hint_y:.2
+        TextInput:
+            id:pass_input
+            password: True
+        Button:
+            text:'Sign Up'
+            on_press:root.signup()
+        Button:
+            text:'Login'
+            on_press:root.login_but()
+
+<NewUserScreen>
+    GridLayout:
+        pos_hint:{'center_x':.5, 'center_y':.5}
+        row_default_height: 5
+        size_hint: .9, .4
+        cols:2
+        Label:
+            text:'First Name'
+        TextInput:
+            id:first_input
+        Label:
+            text:'Last Name'
+        TextInput:
+            id:last_input
+        Label:
+            text:'Username'
+            size_hint_y:.2
+        TextInput:
+            id:uname_input
+        Label:
+            text:'Password'
+        TextInput:
+            id:pass_input
+        Button:
+            text:'Go Back'
+            on_press: root.goback()
+        Button:
+            text:'Get Started'
+            on_press:root.GetStarted()
+
+<UsersHomeScreen>
+    Label:
+        id:uname_label
+        pos_hint:{'center_x':.5, 'center_y':.95}
+        color: 192, 192, 192, .9
+    Button:
+        text:'Logout'
+        pos_hint:{'center_x':.15, 'center_y':.95}
+        size_hint: .1, .15
+        color: 0,0,0,1
+        background_color: 192, 192, 192, .6
+        on_press:root.goback()
+    GridLayout:
+        pos_hint:{'center_x':.5, 'center_y':.5}
+        spacing:15
+        cols:1
+        size_hint:.9, .6
+        Button:
+            text:'Current Game'
+            color: 0,0,0,1
+            background_color: 192, 192, 192, .6
+            on_press:root.currentGameScreen()
+        Button:
+            text:'Create New Game'
+            color: 0,0,0,1
+            background_color: 192, 192, 192, .6
+            on_press:root.createGameScreen()
+        Button:
+            text:'All Games'
+            color: 0,0,0,1
+            background_color: 192, 192, 192, .6
+            on_press:root.viewgames()
+
+<AllGames>
+    Label:
+        id:game_label
+        text:'All Games'
+        pos_hint:{'center_x':.5, 'center_y':.95}
+    GridLayout:
+        cols:1
+        spacing:10
+        size_hint_y:None
+
+<CurrentGame>
+    Label
+        id:currentgame_label
+        text: 'Current Game'
+        pos_hint:{'center_x':.5, 'center_y':.95}
+    Button:
+        text:'Back'
+        pos_hint:{'center_x':.15, 'center_y':.95}
+        size_hint: .1, .15
+        color: 0,0,0,1
+        background_color: 192, 192, 192, .6
+        on_press:root.goback()
+
+<CreateGame>
+    Label
+        id:creategame_label
+        text: 'Create Game'
+        pos_hint:{'center_x':.5, 'center_y':.95}
+    Button:
+        text:'Back'
+        pos_hint:{'center_x':.15, 'center_y':.95}
+        size_hint: .1, .15
+        color: 0,0,0,1
+        background_color: 192, 192, 192, .6
+        on_press:root.goback()
