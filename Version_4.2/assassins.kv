@@ -75,7 +75,7 @@
         size_hint: .1, .15
         color: 0,0,0,1
         background_color: 192, 192, 192, .6
-        on_press:root.goback()
+        on_press:root.logout()
     GridLayout:
         pos_hint:{'center_x':.5, 'center_y':.5}
         spacing:15
@@ -98,14 +98,13 @@
             on_press:root.viewgames()
 
 <AllGames>
-    Label:
-        id:game_label
-        text:'All Games'
-        pos_hint:{'center_x':.5, 'center_y':.95}
-    GridLayout:
-        cols:1
-        spacing:10
-        size_hint_y:None
+    Button:
+        text:'Back'
+        pos_hint:{'center_x':.15, 'center_y':.95}
+        size_hint: .1, .15
+        color: 0,0,0,1
+        background_color: 192, 192, 192, .6
+        on_press:root.goback()
 
 <CurrentGame>
     Label
@@ -119,6 +118,20 @@
         color: 0,0,0,1
         background_color: 192, 192, 192, .6
         on_press:root.goback()
+    Button:
+        id: kill_button
+        background_normal: "red_button-1979px.png"
+        pos_hint: { 'x': .25, 'y': .25 }
+        size_hint_y: .4
+        size_hint_x: .5
+
+	Label:
+		id:players_remaining
+		text: 'Players Remaining: '
+		font_size: 30
+		pos_hint: { 'x': .5, 'y': .06 }
+		size_hint_y: .1
+		size_hint_x: .2
 
 <CreateGame>
     Label
@@ -131,4 +144,38 @@
         size_hint: .1, .15
         color: 0,0,0,1
         background_color: 192, 192, 192, .6
-        on_press:root.goback()
+        on_press:root.clear()
+        on_release:root.goback()
+    GridLayout:
+        pos_hint:{'center_x':.5, 'center_y':.5}
+        row_default_height: 5
+        size_hint: .9, .4
+        cols:2
+        Label:
+            text:'Name'
+        TextInput:
+            id:name_input
+        Label:
+            text:'Location'
+        TextInput:
+            id:location_input
+        Button:
+            text:'Clear'
+            on_press: root.clear()
+        Button:
+            text:'Create'
+            on_press:root.createGame()
+
+<GameInfo>
+    Label
+        id:gameinfo_label
+        text: 'Game Information'
+        pos_hint:{'center_x':.5, 'center_y':.95}
+    Button:
+        text:'Back'
+        pos_hint:{'center_x':.15, 'center_y':.95}
+        size_hint: .1, .15
+        color: 0,0,0,1
+        background_color: 192, 192, 192, .6
+        on_press:root.clear()
+        on_release:root.goback()

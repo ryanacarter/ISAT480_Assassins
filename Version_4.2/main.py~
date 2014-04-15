@@ -15,23 +15,79 @@ from mysql.connector import errorcode
 
 Builder.load_file('assassins.kv')
 
+class GameInfo(FloatLayout):
+    def goback(self):
+        root.remove_widget(gInfo)
+        root.add_widget(sview)
+
 class CreateGame(FloatLayout):
-    pass
+        def goback(self):
+                root.remove_widget(create)
+                root.add_widget(home)
+        
+        def clear(self):
+            self.ids['name_input'].text = ""
+            self.ids['location_input'].text = ""
+
+        def createGame(self):
+            name = self.ids['name_input'].text
+            location = self.ids['location_input'].text
+
+            if name == "" or location == "":
+                popup = Popup(title='Error', content=Label(text='Please enter values'), size_hint=(None, None), size=(400, 100))
+                popup.open()
+            else:
+                results = root.create("INSERT INTO Games (name, location) VALUES ('%s','%s')" % (name,location))
+
+                if results == 1:
+                        popup = Popup(title='Congratulations', content=Label(text='Thank you, game created'), size_hint=(None, None), size=(400, 100))
+                        create.clear()
+                        popup.open()
+                elif results == 0:
+                        popup = Popup(title='Sorry :(', content=Label(text='This game already exists.  Also, please do not include apostrophies'), size_hint=(None, None), size=(400, 100))
+                        create.clear()
+                        popup.open()
+                elif results == 2:
+                        popup = Popup(title='Sorry :(', content=Label(text='Didnt connect'), size_hint=(None, None), size=(400, 100))
+                        create.clear()
+                        popup.open()
 
 class CurrentGame(FloatLayout):
-    pass
+        def goback(self):
+                root.remove_widget(current)
+                root.add_widget(home)
+
+        def getName(self):
+                uid = 10
+                query = root.retrieve("SELECT name FROM Games WHERE uid = \"%s\"" % (uid))
+                name = query[0]
+                current.ids['currentgame_label'].text = name[0]
 
 class AllGames(FloatLayout):
-	pass
+	def goback(self):
+                layout.clear_widgets()
+                sview.remove_widget(layout)
+                root.clear_widgets()
+                root.add_widget(home)
 
 class UsersHomeScreen(FloatLayout):
-        def goback(self):
+        def logout(self):
                 root.remove_widget(home)
                 root.add_widget(login)
+                login.ids['uname_input'].text = ""
+                login.ids['pass_input'].text = ""
+                login.loggedinuser = ""
+                #login.uid = None
+                login.firstname = ""
+                login.lastname = ""
+                login.username = ""
+                login.password = ""
+                login.game = ""
 
         def currentGameScreen(self):
             root.remove_widget(home)
             root.add_widget(current)
+            current.getName()
 
         def createGameScreen(self):
             root.remove_widget(home)
@@ -40,7 +96,7 @@ class UsersHomeScreen(FloatLayout):
         def viewgames(self):
                 root.remove_widget(home)
 #               root.add_widget(games)
-                layout = GridLayout(cols=1, spacing=10, size_hint_y=None)
+                
                 # Make sure the height is such that there is something to scroll.
                 layout.bind(minimum_height=layout.setter('height'))
                 # Run sql query to get all available games
@@ -53,17 +109,20 @@ class UsersHomeScreen(FloatLayout):
                         popup.open()
                 else:
                     for tpl in availableGames:
-                        uid, name = tpl
+                        uid, name, location = tpl
                         btn = Button(text=name, size_hint_y=None, height=40)
                         layout.add_widget(btn)
-                sview = ScrollView(size_hint=(None, None), size=(400, 400))
+
                 sview.add_widget(layout)
                 root.add_widget(sview)
+                root.add_widget(games)
 
 class NewUserScreen(FloatLayout):
         def goback(self):
                 root.remove_widget(newuser)
                 root.add_widget(login)
+                login.ids['uname_input'].text = ""
+                login.ids['pass_input'].text = ""
 
         def GetStarted(self):
 		first = self.ids['first_input'].text
@@ -182,6 +241,9 @@ home = UsersHomeScreen()
 games = AllGames()
 create = CreateGame()
 current = CurrentGame()
+gInfo = GameInfo()
+sview = ScrollView(size_hint=(None, None), size=(400, 400))
+layout = GridLayout(cols=1, spacing=10, size_hint_y=None)
 ip = '172.16.188.143'
 
 class assassinsApp (App):
