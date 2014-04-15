@@ -58,8 +58,8 @@ class CurrentGame(FloatLayout):
                 root.add_widget(home)
 
         def getName(self):
-                uid = 17
-                query = root.retrieve("SELECT name FROM Games WHERE uid = \"%s\"" % (uid))
+                game_id = 17
+                query = root.retrieve("SELECT name FROM Games WHERE game_id = \"%s\"" % (game_id))
                 name = query[0]
                 current.ids['currentgame_label'].text = name[0]
 
@@ -129,21 +129,24 @@ class NewUserScreen(FloatLayout):
 		last = self.ids['last_input'].text
 		uname = self.ids['uname_input'].text
 		pword= self.ids['pass_input'].text
-
-		results = root.create("INSERT INTO users (firstname, lastname, username, password) VALUES ('%s','%s','%s','%s')" % (first,last,uname,pword))
+                if first == "" or last == "" or uname == "" or pword == "":
+                    popup = Popup(title='Error', content=Label(text='Please enter values'), size_hint=(None, None), size=(400, 100))
+                    popup.open()
+                else:
+		    results = root.create("INSERT INTO users (firstname, lastname, username, password) VALUES ('%s','%s','%s','%s')" % (first,last,uname,pword))
 		
-                if results == 1:
-                        popup = Popup(title='Congratulations', content=Label(text='Thank you, please sign in'), size_hint=(None, None), size=(400, 100))
-                        root.remove_widget(newuser)
-                        root.add_widget(login)
-                        popup.open()
-                elif results == 0:
-                        popup = Popup(title='Sorry :(', content=Label(text='Your username is already in use'), size_hint=(None, None), size=(400, 100))
-                        self.ids['uname_input'].text = ""
-                        popup.open()
-                elif results == 2:
-                        popup = Popup(title='Sorry :(', content=Label(text='Didnt connect'), size_hint=(None, None), size=(400, 100))
-                        popup.open()
+                    if results == 1:
+                            popup = Popup(title='Congratulations', content=Label(text='Thank you, please sign in'), size_hint=(None, None), size=(400, 100))
+                            root.remove_widget(newuser)
+                            root.add_widget(login)
+                            popup.open()
+                    elif results == 0:
+                            popup = Popup(title='Sorry :(', content=Label(text='Your username is already in use'), size_hint=(None, None), size=(400, 100))
+                            self.ids['uname_input'].text = ""
+                            popup.open()
+                    elif results == 2:
+                            popup = Popup(title='Sorry :(', content=Label(text='Didnt connect'), size_hint=(None, None), size=(400, 100))
+                            popup.open()
 
 class LoginScreen(FloatLayout):
         def changeScreen(self):
@@ -162,7 +165,7 @@ class LoginScreen(FloatLayout):
                 if len(uname.text) > 0:
                         if len(pword.text) > 0:
                                 query = root.retrieve("SELECT * FROM users WHERE username = \"%s\" AND password = \"%s\"" % (uname.text, pword.text))
-                                if query == "":
+                                if len(query) < 1:
                                         popup = Popup(title='Invalid Credentials', content=Label(text='Username or Password is Incorrect'), size_hint=(None, None), size=(400, 100))
                                         popup.open()
                                 elif query == 0:
