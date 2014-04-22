@@ -1,0 +1,3 @@
+title=myrssi
+author=emil
+orientation=landscape

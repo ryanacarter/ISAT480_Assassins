@@ -1,0 +1,84 @@
+# File name: boxlayout.kv
+
+<BoxLayout>:
+    Button:
+        id: b0
+        text: '0'
+        on_release: app.reset([b1, b2, b3, b4, b5])
+ 
+    ToggleButton:
+        id: b1
+        text: '1'
+        on_release: app.send(self.text)
+ 
+    ToggleButton:
+        id: b2
+        text: '2'
+        on_release: app.send(self.text)
+ 
+    ToggleButton:
+        id: b3
+        text: '3'
+        on_release: app.send(self.text)
+ 
+    ToggleButton:
+        id: b4
+        text: '4'
+        on_release: app.send(self.text)
+ 
+    ToggleButton:
+        id: b5
+        text: '5'
+        on_release: app.send(self.text)
+
+
+
+
+
+
+## File name: floatlayout.kv
+##<Button>:
+##	color: .8,.9,0,1
+##	font_size: 40
+##	size_hint: .4, .3
+##<Label>:
+##	color:.8,.9,0,1
+##	font_size: 40
+##	size_hint: .4, .3
+##
+##<ToggleButton>:
+##	color: 0.8, 0.8, 0, 1
+##	font_size:40
+##	size_hint: .4, .3
+ 
+##<FloatLayoutWidget>:
+##	orientation:'horizontal'
+###        id:mine
+###	button1: button1
+###	button2:button2
+###	label1: label1
+###	label2: label2
+##
+##	Button:
+##		id:button1 
+##		text: 'Hello'
+##		pos_hint: {'x': 0, 'top': 1}
+##		on_press:app.change_button_text()
+##
+##	ToggleButton:
+##		id:button2
+##		pos_hint:{'right':1,'top':1}
+##		text: 'Start' if self.state == 'normal' else 'Stop'
+###		on_state: app.on_resume() if self.state == 'down' else app.on_pause()
+###		on_state: app.gps.start() if self.state == 'down' else app.gps.stop
+##
+##
+##	Label:
+##		id:label1
+##		text: 'World!'
+##		pos_hint: {'x':0.3, 'y': 0}
+##
+##	Label:
+##		id:label2
+##		text: app.gps_location
+##		pos_hint: {'x':0.3, 'y':0.3}
