@@ -58,7 +58,7 @@ class CurrentGame(FloatLayout):
                 root.add_widget(home)
 
         def getName(self):
-                uid = 17
+                uid = 10
                 query = root.retrieve("SELECT name FROM Games WHERE uid = \"%s\"" % (uid))
                 name = query[0]
                 current.ids['currentgame_label'].text = name[0]
@@ -244,7 +244,7 @@ current = CurrentGame()
 gInfo = GameInfo()
 sview = ScrollView(size_hint=(None, None), size=(400, 400))
 layout = GridLayout(cols=1, spacing=10, size_hint_y=None)
-ip = '127.0.0.1'
+ip = '172.16.188.143'
 
 class assassinsApp (App):
 	def build (self):
