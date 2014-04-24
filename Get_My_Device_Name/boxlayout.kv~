@@ -1,0 +1,7 @@
+# File name: boxlayout.kv
+
+<BoxLayoutWidget>
+    Button:
+        id: 'b0'
+        text: '0'
+

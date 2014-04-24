@@ -53,15 +53,15 @@ class BoxLayoutApp(App):
 		else:
 			print "device is not BT Capable"
 		if self.myBluetoothAdapter.isEnabled() is False:
-#			self.intent = self.Intent()
+			self.intent = self.Intent()
 			print self.myBluetoothAdapter.isEnabled()
-#			self.myBluetoothAdapter.startDiscovery()
-#			self.enableBtIntent = self.Intent(self.BluetoothAdapter.ACTION_REQUEST_ENABLE)
-#			self.getActivity().startActivityForResult(self.enableBtIntent, 1)
-#		self.myBluetoothAdapter.disable() 
-#		self.myBluetoothAdapter.startDiscovery()
-		self.br =self.BroadcastReceiver(self.onReceive, actions=['Bluetooth_on'])
-		self.br.start()
+			self.myBluetoothAdapter.startDiscovery()
+			self.enableBtIntent = self.Intent(self.BluetoothAdapter.ACTION_REQUEST_ENABLE)
+			self.getActivity().startActivityForResult(self.enableBtIntent, 1)
+			self.myBluetoothAdapter.disable() 
+			self.myBluetoothAdapter.startDiscovery()
+			self.br =self.BroadcastReceiver(self.onReceive, actions=['Bluetooth_on'])
+			self.br.start()
 
 		print "I am here."
 	        return BoxLayoutWidget()

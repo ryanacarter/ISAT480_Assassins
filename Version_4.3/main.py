@@ -244,7 +244,7 @@ current = CurrentGame()
 gInfo = GameInfo()
 sview = ScrollView(size_hint=(None, None), size=(400, 400))
 layout = GridLayout(cols=1, spacing=10, size_hint_y=None)
-ip = '192.168.1.'
+ip = '192.168.1.6'
 
 class assassinsApp (App):
 	def build (self):

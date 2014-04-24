@@ -1,0 +1,3 @@
+title=myBT
+author=emil
+orientation=landscape
