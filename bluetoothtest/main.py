@@ -13,6 +13,8 @@ from kivy.uix.button import Button
 import mysql.connector
 from mysql.connector import errorcode
 from jnius import autoclass
+from jnius import cast
+from android.broadcast import BroadcastReciever
 
 Builder.load_file('assassins.kv')
 
@@ -34,8 +36,10 @@ class LoginScreen(FloatLayout):
                 self.UUID = autoclass('java.util.UUID')
                 self.Bundle = autoclass('android.os.Bundle')
                 self.Intent = autoclass('android.content.Intent')
-                self.Activity = autoclass('android.app.Activity')
+                self.IntentFilter = autoclass('android.content.IntentFilter')
                 self.Context = autoclass('android.content.Context')
+                self.Toast = autoclass('android.widget.Toast')
+                self.PythonActivity = autoclass('org.renpy.android.PythonActivity')
                 
                 
 ##                self.action = self.Intent.getAction()
@@ -63,23 +67,52 @@ class LoginScreen(FloatLayout):
 ##                
 ##                self.Filter = Context.IntentFilter(BluetoothDevice.ACTION_FOUND)
 ##                Context.RegisterReceiver(self.br, self.Filter)
-
-                
-                self.br = self.BroadcastReceiver(self.onReceive, actions=['Bluetooth_on'])
-                self.br.start()
+##
 ##                
+                self.br = self.BroadcastReceiver(self.onReceive, actions=['found'])
+                self.br.start()
+                
         def onReceive(self, *args, **kwargs):
-
                 self.action = intent.getAction()
                 if (self.BluetoothDevice.ACTION_FOUND == self.action):
                         self.myBluetoothDevice = intent.getParcelableExtra(self.BluetoothDevice.EXTRA_DEVICE)
                         name = myBluetoothDevice.getName()
                         Toast.makeText(getApplicationContext()," Name:" + name, Toast.LENGTH_SHORT).show()
 
+                self.myBTA = self.BluetoothAdapter.getDefaultAdapter()
+                if self.myBTA is None:
+                        popup = Popup(title='Sorry :(', content=Label(text='Didnt connect'), size_hint=(None, None), size=(400, 100))
+                        popup.open()
 
+                if(self.myBTA.isEnabled() == False):
+                        intent = self.Intent()
+                        intent.setAction(self.BluetoothAdapter.ACTION_REQUEST_ENABLE)
+                        myActivity = cast('android.app.Activity', self.PythonActivity.mActivity)
+                        myActivity.startActivity(intent)
+                        
+        def turnOnDiscovery (self):
+                if(self.myBTA.isEnabled() == True):
+                        if(self.myBTA.isDiscovering() == False):
+                                intent = self.Intent()
+                                intent.setAction(self.BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE)
+                                myActivity = cast('android.app.Activity', self.PythonActivity.mActivity)
+                                myActivity.startActivity(intent)
+                        else:
+                                popup = Popup(title='Bluetooth Info', content=Label(text='Bluetooth is Already Enabled'), size_hint=(None, None), size=(400, 100))
+                                popup.open()   
 
-
-   
+        def findDevices (self):
+                
+                if(self.myBTA.isEnable() == TRUE and self.myBTA.isDiscovering() == TRUE):
+                        pass
+##                        myFilter = self.IntentFilter(ACTION_FOUND)
+##                        myActivity = cast('android.app.Activity', PythonActivity.mActivity)
+##                        myActivity.startActivity(myFilter)
+##                        
+##                        self.br = self.BroadcastReveiver(self.onRecieve)
+##
+##        def onReceive(self, *args, **kwargs):
+##                self.intent
               
 class RootWidget(FloatLayout):
         pass
