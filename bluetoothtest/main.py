@@ -14,7 +14,7 @@ import mysql.connector
 from mysql.connector import errorcode
 from jnius import autoclass
 from jnius import cast
-from android.broadcast import BroadcastReciever
+from android.broadcast import BroadcastReceiver
 
 Builder.load_file('assassins.kv')
 
@@ -32,7 +32,6 @@ class LoginScreen(FloatLayout):
                 self.BluetoothAdapter = autoclass('android.bluetooth.BluetoothAdapter')
                 self.BluetoothDevice = autoclass('android.bluetooth.BluetoothDevice')
                 self.BluetoothSocket = autoclass('android.bluetooth.BluetoothSocket')
-                self.BroadcastReceiver = autoclass('android.content.BroadcastReceiver')
                 self.UUID = autoclass('java.util.UUID')
                 self.Bundle = autoclass('android.os.Bundle')
                 self.Intent = autoclass('android.content.Intent')
@@ -40,7 +39,9 @@ class LoginScreen(FloatLayout):
                 self.Context = autoclass('android.content.Context')
                 self.Toast = autoclass('android.widget.Toast')
                 self.PythonActivity = autoclass('org.renpy.android.PythonActivity')
-                
+
+                self.printLabel = self.ids['label1']
+                self.printLabel.text = "hello"
                 
 ##                self.action = self.Intent.getAction()
 ##
@@ -68,18 +69,14 @@ class LoginScreen(FloatLayout):
 ##                self.Filter = Context.IntentFilter(BluetoothDevice.ACTION_FOUND)
 ##                Context.RegisterReceiver(self.br, self.Filter)
 ##
-##                
-                self.br = self.BroadcastReceiver(self.onReceive, actions=['found'])
-                self.br.start()
-                
-        def onReceive(self, *args, **kwargs):
-                self.action = intent.getAction()
-                if (self.BluetoothDevice.ACTION_FOUND == self.action):
-                        self.myBluetoothDevice = intent.getParcelableExtra(self.BluetoothDevice.EXTRA_DEVICE)
-                        name = myBluetoothDevice.getName()
-                        Toast.makeText(getApplicationContext()," Name:" + name, Toast.LENGTH_SHORT).show()
+##
+##                if (self.BluetoothDevice.ACTION_FOUND == self.action):
+##                        self.myBluetoothDevice = intent.getParcelableExtra(self.BluetoothDevice.EXTRA_DEVICE)
+##                        name = myBluetoothDevice.getName()
+##                        Toast.makeText(getApplicationContext()," Name:" + name, Toast.LENGTH_SHORT).show()
 
                 self.myBTA = self.BluetoothAdapter.getDefaultAdapter()
+                
                 if self.myBTA is None:
                         popup = Popup(title='Sorry :(', content=Label(text='Didnt connect'), size_hint=(None, None), size=(400, 100))
                         popup.open()
@@ -102,17 +99,19 @@ class LoginScreen(FloatLayout):
                                 popup.open()   
 
         def findDevices (self):
-                
-                if(self.myBTA.isEnable() == TRUE and self.myBTA.isDiscovering() == TRUE):
-                        pass
-##                        myFilter = self.IntentFilter(ACTION_FOUND)
-##                        myActivity = cast('android.app.Activity', PythonActivity.mActivity)
-##                        myActivity.startActivity(myFilter)
-##                        
-##                        self.br = self.BroadcastReveiver(self.onRecieve)
-##
-##        def onReceive(self, *args, **kwargs):
-##                self.intent
+                self.br = BroadcastReceiver(content = self.onReceive, actions=['main'], myFilter = self.BluetoothDevice.ACTION_FOUND)
+                self.br.start()
+
+                self.myBTA.startDiscovery()
+ 
+        def onReceive(self, context, intent):
+                action = intent.getAction();
+                if (self.BluetoothDevice.ACTION_FOUND == action):
+                        extras = intent.getParcelableExtra(self.BluetoothDevice.EXTRA_DEVICE)
+                        device = cast('android.bluetooth.BluetoothDevice', extras)
+                        deviceName = device.getName()
+                        print deviceName
+                        self.printLabel.text = deviceName
               
 class RootWidget(FloatLayout):
         pass

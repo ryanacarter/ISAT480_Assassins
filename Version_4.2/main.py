@@ -164,12 +164,15 @@ class LoginScreen(FloatLayout):
                 # make sure that the values are not null
                 if len(uname.text) > 0:
                         if len(pword.text) > 0:
+                                popup = Popup(title='', content=Label(text='Loading . . .'), size_hint=(None, None), size=(400, 100))
+                                popup.open()
                                 query = root.retrieve("SELECT * FROM users WHERE username = \"%s\" AND password = \"%s\"" % (uname.text, pword.text))
-                                if len(query) < 1:
-                                        popup = Popup(title='Invalid Credentials', content=Label(text='Username or Password is Incorrect'), size_hint=(None, None), size=(400, 100))
-                                        popup.open()
-                                elif query == 0:
+                                popup.dismiss()
+                                if query == 0:
                                         popup = Popup(title='Connection', content=Label(text='Could not connect to the database'), size_hint=(None, None), size=(400, 100))
+                                        popup.open()
+                                elif len(query) < 1:
+                                        popup = Popup(title='Invalid Credentials', content=Label(text='Username or Password is Incorrect'), size_hint=(None, None), size=(400, 100))
                                         popup.open()
                                 else:
                                         uid, firstname, lastname, username, password, game = query[0]
@@ -192,24 +195,23 @@ class RootWidget(FloatLayout):
 
         def retrieve (self, sql):
                 try:
-
                         cnx = mysql.connector.connect(user='assassins', password='checkout', host=ip, database='assassins')
 
                         # set the cursor to extract the data
                         cur = cnx.cursor()
                         cur.execute(sql)
-                        
                         return cur.fetchall()
 
                 except mysql.connector.Error as err:
                         if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
                                 print("Something is wrong with your user name or password")
-                                return(0)
+                                return("")
                         elif err.errno == errorcode.ER_BAD_DB_ERROR:
                                 print("Database does not exists")
                                 return(0)
                         else:
                                 print(err)
+                                return(0)
                 else:
                         cnx.close()
                         return(0)
@@ -247,7 +249,7 @@ current = CurrentGame()
 gInfo = GameInfo()
 sview = ScrollView(size_hint=(None, None), size=(400, 400))
 layout = GridLayout(cols=1, spacing=10, size_hint_y=None)
-ip = '127.0.0.1'
+ip = '192.168.1.6'
 
 class assassinsApp (App):
 	def build (self):
