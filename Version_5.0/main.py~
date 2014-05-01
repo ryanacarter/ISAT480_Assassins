@@ -164,21 +164,16 @@ class LoginScreen(FloatLayout):
                 # make sure that the values are not null
                 if len(uname.text) > 0:
                         if len(pword.text) > 0:
-                                popup = Popup(title='', content=Label(text='Loading . . .'), size_hint=(None, None), size=(400, 100))
-                                popup.open()
                                 query = root.retrieve("SELECT * FROM users WHERE username = \"%s\" AND password = \"%s\"" % (uname.text, pword.text))
-                                popup.dismiss()
-                                if query == 0:
-                                        popup = Popup(title='Connection', content=Label(text='Could not connect to the database'), size_hint=(None, None), size=(400, 100))
-                                        popup.open()
-                                elif len(query) < 1:
+                                if len(query) < 1:
                                         popup = Popup(title='Invalid Credentials', content=Label(text='Username or Password is Incorrect'), size_hint=(None, None), size=(400, 100))
+                                        popup.open()
+                                elif query == 0:
+                                        popup = Popup(title='Connection', content=Label(text='Could not connect to the database'), size_hint=(None, None), size=(400, 100))
                                         popup.open()
                                 else:
                                         uid, firstname, lastname, username, password, game = query[0]
                                         loggedinuser = username
-                                        root.getBluetoothName()
-                                        
                                         root.remove_widget(login)
                                         home.ids['uname_label'].text = "Welcome back %s" % (firstname)
                                         root.add_widget(home)
@@ -197,23 +192,24 @@ class RootWidget(FloatLayout):
 
         def retrieve (self, sql):
                 try:
+
                         cnx = mysql.connector.connect(user='assassins', password='checkout', host=ip, database='assassins')
 
                         # set the cursor to extract the data
                         cur = cnx.cursor()
                         cur.execute(sql)
+                        
                         return cur.fetchall()
 
                 except mysql.connector.Error as err:
                         if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
                                 print("Something is wrong with your user name or password")
-                                return("")
+                                return(0)
                         elif err.errno == errorcode.ER_BAD_DB_ERROR:
                                 print("Database does not exists")
                                 return(0)
                         else:
                                 print(err)
-                                return(0)
                 else:
                         cnx.close()
                         return(0)
@@ -241,13 +237,6 @@ class RootWidget(FloatLayout):
                                 print(err)
                                 return(0)
 
-        def getBluetoothName()
-
-
-
-        def varifyBTAdapter()
-
-
 root = RootWidget()
 login = LoginScreen()
 newuser = NewUserScreen()
@@ -258,23 +247,12 @@ current = CurrentGame()
 gInfo = GameInfo()
 sview = ScrollView(size_hint=(None, None), size=(400, 400))
 layout = GridLayout(cols=1, spacing=10, size_hint_y=None)
-ip = '192.168.1.6'
-BluetoothAdapter = autoclass('android.bluetooth.BluetoothAdapter')
-BluetoothDevice = autoclass('android.bluetooth.BluetoothDevice')
-BluetoothSocket = autoclass('android.bluetooth.BluetoothSocket')
-UUID = autoclass('java.util.UUID')
-Bundle = autoclass('android.os.Bundle')
-Intent = autoclass('android.content.Intent')
-IntentFilter = autoclass('android.content.IntentFilter')
-Context = autoclass('android.content.Context')
-Toast = autoclass('android.widget.Toast')
-PythonActivity = autoclass('org.renpy.android.PythonActivity')
-myBTA = self.BluetoothAdapter.getDefaultAdapter()
+ip = '172.16.188.143'
 
 class assassinsApp (App):
 	def build (self):
                 root.add_widget(login)
-                root.verifyBTAdapter()
+                
 		return root
 
 	

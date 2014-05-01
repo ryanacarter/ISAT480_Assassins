@@ -1,4 +1,4 @@
-<LoginScreen>
+<RootWidget>
     canvas:
         Rectangle:
             source:'pictures/background.jpg'
@@ -7,8 +7,11 @@
             source:'pictures/creed.png'
             size: self.width / 1,  self.height / 2
             pos: 0, 450
+            
+<LoginScreen>
+
     GridLayout:
-        pos_hint:{'center_x':.5, 'center_y':.6}
+        pos_hint:{'center_x':.5, 'center_y':.35}
         row_default_height: 5
         size_hint: .9, .2
         cols:2
@@ -16,14 +19,11 @@
         Label:
             text:'Username'
             size_hint_y:.2
-            rgba: 192, 192, 192, .9
-            font_size: 50
         TextInput:
             id:uname_input
         Label:
             text:'Password'
             size_hint_y:.2
-            rgba: 192, 192, 192, .9
         TextInput:
             id:pass_input
             password: True
@@ -104,7 +104,8 @@
         size_hint: .1, .15
         color: 0,0,0,1
         background_color: 192, 192, 192, .6
-        on_press:root.goback()
+        on_press:root.clear()
+        on_release:root.goback()
 
 <CurrentGame>
     Label

@@ -1,0 +1,3 @@
+title=Assassins_4.2
+author=na
+orientation=portait
