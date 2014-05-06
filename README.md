@@ -3,7 +3,7 @@ ISAT480_Assassins
 Assassins App
 Version 6.0
 05/05/2014
-Compatible with Android, Linux, Windows, OS X
+
 
 ------------------------------------------------------------------------------------------
 FILES LIST:
@@ -45,10 +45,12 @@ GENERAL USAGE NOTES:
 ------------------------------------------------------------------------------------------
 FEATURES:
 	
-	1. Designed using Kivy, which is an open source python library designed especially for
+	1. Compatible with Android, Linux, OS X, and Windows 
+	
+	2. Designed using Kivy, which is an open source python library designed especially for
 	the development of mobile applications.
 	
-	2. Bluetooth connectivity allows devices to communicate their proximity from one 
+	3. Bluetooth connectivity allows devices to communicate their proximity from one 
 	another. It is essential for the functionality of this application. The app
 	must require the user to initiate the device discoverable mode. The "BluetoothAdapter" 
 	class allows the user to perform tasks such as initiating device discovery. 
