@@ -19,51 +19,96 @@ from android.broadcast import BroadcastReceiver
 Builder.load_file('assassins.kv')
 
 #########################################################################
-# User Information --Logged IN
-######################################################################### 
-uid = ""
-firstName = ""
-lastName = ""
-username = ""
-gameID = ""
-bt_ID = ""
+# User Oject to hold all of the Users information
+#########################################################################
+class user():
+    uid = ""
+    firstName = ""
+    lastName = ""
+    username = ""
+    game_id = ""
+    bt_ID = ""
+    status = ""
+    target = ""
 
 class GameInfo(FloatLayout):
     def goback(self):
         root.remove_widget(gInfo)
         root.add_widget(sview)
 
-class CreateGame(FloatLayout):
-        def goback(self):
-                root.remove_widget(create)
-                root.add_widget(home)
-        
-        def clear(self):
-            self.ids['name_input'].text = ""
-            self.ids['location_input'].text = ""
+#######################################################################################
+# CreateGameScreen Widget
+#######################################################################################
+class CreateGameScreen(Screen, FloatLayout):
+    def goback(self):
+        sm.current = "Home"
+    
+    def clear(self):
+        self.ids['name_input'].text = ""
+        self.ids['location_input'].text = ""
 
-        def createGame(self):
-            name = self.ids['name_input'].text
-            location = self.ids['location_input'].text
+    def createGame(self):
+        name = self.ids['name_input'].text
+        location = self.ids['location_input'].text
 
-            if name == "" or location == "":
-                popup = Popup(title='Error', content=Label(text='Please enter values'), size_hint=(None, None), size=(400, 100))
+        if name == "" or location == "":
+            popup = Popup(title='Error', content=Label(text='Please enter values'), size_hint=(None, None), size=(400, 100))
+            popup.open()
+        else:
+            results = create("INSERT INTO Games (name, location) VALUES ('%s','%s')" % (name,location))
+
+            if results == 1:
+                popup = Popup(title='Congratulations', content=Label(text='Thank you, game created'), size_hint=(None, None), size=(400, 100))
+                self.clear()
                 popup.open()
-            else:
-                results = root.create("INSERT INTO Games (name, location) VALUES ('%s','%s')" % (name,location))
+            elif results == 0:
+                popup = Popup(title='Sorry :(', content=Label(text='This game already exists.  Also, please do not include apostrophies'), size_hint=(None, None), size=(400, 100))
+                self.clear()
+                popup.open()
+            elif results == 2:
+                popup = Popup(title='Sorry :(', content=Label(text='Didnt connect'), size_hint=(None, None), size=(400, 100))
+                self.clear()
+                popup.open()
+    
 
-                if results == 1:
-                        popup = Popup(title='Congratulations', content=Label(text='Thank you, game created'), size_hint=(None, None), size=(400, 100))
-                        create.clear()
-                        popup.open()
-                elif results == 0:
-                        popup = Popup(title='Sorry :(', content=Label(text='This game already exists.  Also, please do not include apostrophies'), size_hint=(None, None), size=(400, 100))
-                        create.clear()
-                        popup.open()
-                elif results == 2:
-                        popup = Popup(title='Sorry :(', content=Label(text='Didnt connect'), size_hint=(None, None), size=(400, 100))
-                        create.clear()
-                        popup.open()
+##class CreateGame(FloatLayout):
+##        def goback(self):
+##                root.remove_widget(create)
+##                root.add_widget(home)
+##        
+##        def clear(self):
+##            self.ids['name_input'].text = ""
+##            self.ids['location_input'].text = ""
+##
+##        def createGame(self):
+##            name = self.ids['name_input'].text
+##            location = self.ids['location_input'].text
+##
+##            if name == "" or location == "":
+##                popup = Popup(title='Error', content=Label(text='Please enter values'), size_hint=(None, None), size=(400, 100))
+##                popup.open()
+##            else:
+##                results = root.create("INSERT INTO Games (name, location) VALUES ('%s','%s')" % (name,location))
+##
+##                if results == 1:
+##                        popup = Popup(title='Congratulations', content=Label(text='Thank you, game created'), size_hint=(None, None), size=(400, 100))
+##                        create.clear()
+##                        popup.open()
+##                elif results == 0:
+##                        popup = Popup(title='Sorry :(', content=Label(text='This game already exists.  Also, please do not include apostrophies'), size_hint=(None, None), size=(400, 100))
+##                        create.clear()
+##                        popup.open()
+##                elif results == 2:
+##                        popup = Popup(title='Sorry :(', content=Label(text='Didnt connect'), size_hint=(None, None), size=(400, 100))
+##                        create.clear()
+##                        popup.open()
+##
+class EliminatedScreen(Screen, FloatLayout):
+    def __init__ (self, *args, **kwargs):
+        super(EliminatedScreen, self).__init__(*args, **kwargs)
+
+    def goback(self):
+        sm.current = "Home"
 
 #######################################################################################
 # CurrentGameScreen Widget
@@ -74,12 +119,6 @@ class CurrentGameScreen(Screen, FloatLayout):
 
     def goback(self):
         sm.current = "Home"
-
-    def getName(self):
-            game_id = 17
-            query = root.retrieve("SELECT name FROM Games WHERE game_id = \"%s\"" % (game_id))
-            name = query[0]
-            current.ids['currentgame_label'].text = name[0]
 
 
 #######################################################################################
@@ -103,10 +142,17 @@ class UsersHomeScreen(Screen, FloatLayout):
         logoutUser()
 
     def currentGameScreen(self):
-        sm.current = "Current"
+        print "i am here    -> " , user.game_id 
+        if (user.game_id == 0):
+            popup = Popup(title='Notification', content=Label(text='Please Select a game from \nthe All Games Button'), size_hint=(.9, .3), size=(800, 800))
+            popup.open()
+        elif (user.status == 0):
+            sm.current = "Eliminated"
+        else:
+            sm.current = "Current"
 
     def createGameScreen(self):
-        pass
+        sm.current = "Create"
 ##        root.remove_widget(home)
 ##        root.add_widget(create)
 
@@ -150,7 +196,7 @@ class NewUserScreen(Screen, FloatLayout):
 		uname = self.ids['uname_input'].text
 		pword= self.ids['pass_input'].text
                 if first == "" or last == "" or uname == "" or pword == "":
-                    popup = Popup(title='Error', content=Label(text='Please enter values'), size_hint=(None, None), size=(400, 100))
+                    popup = Popup(title='Error', content=Label(text='Please enter values'), size_hint=(.9, .3), size=(800, 800))
                     popup.open()
                 else:
                     gameID = 0
@@ -158,15 +204,15 @@ class NewUserScreen(Screen, FloatLayout):
 		    results = create("INSERT INTO users (firstname, lastname, username, password, game_id, bt_ID) VALUES ('%s','%s','%s','%s', '%i', '%s')" % (first,last,uname,pword, gameID, bt_ID))
 		
                     if results == 1:
-                            popup = Popup(title='Congratulations', content=Label(text='Thank you, please sign in'), size_hint=(None, None), size=(400, 100))
+                            popup = Popup(title='Congratulations', content=Label(text='Thank you, please sign in'),size_hint=(.9, .3), size=(800, 800))
                             sm.current = "Login"
                             popup.open()
                     elif results == 0:
-                            popup = Popup(title='Sorry :(', content=Label(text='Your username is already in use'), size_hint=(None, None), size=(400, 100))
+                            popup = Popup(title='Sorry :(', content=Label(text='Your username is already in use'),size_hint=(.9, .3), size=(800, 800))
                             self.ids['uname_input'].text = ""
                             popup.open()
                     elif results == 2:
-                            popup = Popup(title='Sorry :(', content=Label(text='Didnt connect'), size_hint=(None, None), size=(400, 100))
+                            popup = Popup(title='Sorry :(', content=Label(text='Didnt connect'), size_hint=(.9, .3), size=(800, 800))
                             popup.open()
 
 
@@ -203,9 +249,9 @@ class LoginScreen(Screen, FloatLayout):
                                         popup = Popup(title='Invalid Credentials', content=Label(text='Username or Password is Incorrect'), size_hint=(.9, .3), size=(800, 800))
                                         popup.open()
                                 else:
-                                        uid, firstname, lastname, username, password, game, bt_ID, status, target = query[0]
+                                        user.uid, user.firstname, user.lastname, user.username, user.password, user.game_id, user.bt_ID, user.status, user.target = query[0]
                                         bt_ID = myBTA.getAddress()
-                                        results = create("UPDATE users SET bt_ID = '%s' WHERE uid = '%s'" % (bt_ID, uid))
+                                        results = create("UPDATE users SET bt_ID = '%s' WHERE uid = '%s'" % (bt_ID, user.uid))
                                         uname.text = ""
                                         pword.text = ""
                                         sm.current = "Home"
@@ -292,14 +338,14 @@ def update (sql):
             return(0)
 
 def logoutUser():
-    uid = ""
-    firstName = ""
-    lastName = ""
-    username = ""
-    gameID = ""
-    bt_ID = ""
-    status = False
-    target = ""
+    user.uid = ""
+    user.firstName = ""
+    user.lastName = ""
+    user.username = ""
+    user.game_id = ""
+    user.bt_ID = ""
+    user.status = 1
+    user.target = ""
     sm.current = "Login"
 
 
@@ -312,6 +358,8 @@ sm.add_widget(LoginScreen(name='Login'))
 sm.add_widget(NewUserScreen(name='NewUser'))
 sm.add_widget(UsersHomeScreen(name='Home'))
 sm.add_widget(CurrentGameScreen(name='Current'))
+sm.add_widget(EliminatedScreen(name='Eliminated'))
+sm.add_widget(CreateGameScreen(name='Create'))
 
 #########################################################################
 # Variables
@@ -343,10 +391,10 @@ myBTA = BluetoothAdapter.getDefaultAdapter()
 class assassinsApp (App):
     def build (self):
         if(myBTA.isEnabled() == False):
-                        intent = Intent()
-                        intent.setAction(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-                        myActivity = cast('android.app.Activity', PythonActivity.mActivity)
-                        myActivity.startActivity(intent)
+            intent = Intent()
+            intent.setAction(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+            myActivity = cast('android.app.Activity', PythonActivity.mActivity)
+            myActivity.startActivity(intent)
         return sm
 
 if __name__ == '__main__':
