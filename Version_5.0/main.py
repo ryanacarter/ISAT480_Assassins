@@ -192,28 +192,28 @@ class LoginScreen(Screen, FloatLayout):
                 # make sure that the values are not null
                 if len(uname.text) > 0:
                         if len(pword.text) > 0:
-                                popup = Popup(title='', content=Label(text='Loading . . .'), size_hint=(None, None), size=(400, 100))
+                                popup = Popup(title='', content=Label(text='Loading . . .'), size_hint=(.9, .3), size=(800, 800))
                                 popup.open()
                                 query = retrieve("SELECT * FROM users WHERE username = \"%s\" AND password = \"%s\"" % (uname.text, pword.text))
                                 popup.dismiss()
                                 if query == 0:
-                                        popup = Popup(title='Connection', content=Label(text='Could not connect to the database'), size_hint=(None, None), size=(400, 100))
+                                        popup = Popup(title='Connection', content=Label(text='Could not connect to the database'), size_hint=(.9, .3), size=(800, 800))
                                         popup.open()
                                 elif len(query) < 1:
-                                        popup = Popup(title='Invalid Credentials', content=Label(text='Username or Password is Incorrect'), size_hint=(None, None), size=(400, 100))
+                                        popup = Popup(title='Invalid Credentials', content=Label(text='Username or Password is Incorrect'), size_hint=(.9, .3), size=(800, 800))
                                         popup.open()
                                 else:
-                                        uid, firstname, lastname, username, password, game, bt_ID = query[0]
+                                        uid, firstname, lastname, username, password, game, bt_ID, status, target = query[0]
                                         bt_ID = myBTA.getAddress()
                                         results = create("UPDATE users SET bt_ID = '%s' WHERE uid = '%s'" % (bt_ID, uid))
                                         uname.text = ""
                                         pword.text = ""
                                         sm.current = "Home"
                         else:
-                                popup = Popup(title='Invalid Credentials', content=Label(text='Please Enter a Password'), size_hint=(None, None), size=(400, 100))
+                                popup = Popup(title='Invalid Credentials', content=Label(text='Please Enter a Password'), size_hint=(.9, .3), size=(800, 800))
                                 popup.open()
                 else:
-                        popup = Popup(title='Invalid Credentials', content=Label(text='Please Enter a Username'), size_hint=(None, None), size=(400, 100))
+                        popup = Popup(title='Invalid Credentials', content=Label(text='Please Enter a Username'), size_hint=(.9, .3), size=(800, 800))
                         popup.open()
 
         # This changes to screen to the new user page.
@@ -298,6 +298,8 @@ def logoutUser():
     username = ""
     gameID = ""
     bt_ID = ""
+    status = False
+    target = ""
     sm.current = "Login"
 
 
@@ -316,7 +318,7 @@ sm.add_widget(CurrentGameScreen(name='Current'))
 ######################################################################### 
 sview = ScrollView(size_hint=(None, None), size=(400, 400))
 layout = GridLayout(cols=1, spacing=10, size_hint_y=None)
-ip = '192.168.1.116'
+ip = '192.168.1.6'
 
 #########################################################################
 # Bluetooth
