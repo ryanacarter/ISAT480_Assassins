@@ -11,7 +11,7 @@ FILES LIST:
 	main.py
 	assassins.kv
 	android.txt
-	readme.txt
+	readme.md
 
 ------------------------------------------------------------------------------------------
 GAME CONCEPT:
