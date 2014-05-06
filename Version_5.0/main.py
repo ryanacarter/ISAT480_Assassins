@@ -65,17 +65,26 @@ class CreateGame(FloatLayout):
                         create.clear()
                         popup.open()
 
-class CurrentGame(FloatLayout):
-        def goback(self):
-                root.remove_widget(current)
-                root.add_widget(home)
+#######################################################################################
+# CurrentGameScreen Widget
+#######################################################################################
+class CurrentGameScreen(Screen, FloatLayout):
+    def __init__ (self, *args, **kwargs):
+        super(CurrentGameScreen, self).__init__(*args, **kwargs)
 
-        def getName(self):
-                game_id = 17
-                query = root.retrieve("SELECT name FROM Games WHERE game_id = \"%s\"" % (game_id))
-                name = query[0]
-                current.ids['currentgame_label'].text = name[0]
+    def goback(self):
+        sm.current = "Home"
 
+    def getName(self):
+            game_id = 17
+            query = root.retrieve("SELECT name FROM Games WHERE game_id = \"%s\"" % (game_id))
+            name = query[0]
+            current.ids['currentgame_label'].text = name[0]
+
+
+#######################################################################################
+# AllGamesScreen Widget
+#######################################################################################
 class AllGames(FloatLayout):
 	def goback(self):
                 layout.clear_widgets()
@@ -84,56 +93,46 @@ class AllGames(FloatLayout):
                 root.add_widget(home)
 
 #######################################################################################
-# UserHomeScreenWidget
+# UserHomeScreen Widget
 #######################################################################################
 class UsersHomeScreen(Screen, FloatLayout):
     def __init__ (self, *args, **kwargs):
         super(UsersHomeScreen, self).__init__(*args, **kwargs)
     
     def logout(self):
-        root.remove_widget(home)
-        root.add_widget(login)
-        login.ids['uname_input'].text = ""
-        login.ids['pass_input'].text = ""
-        login.loggedinuser = ""
-        #login.uid = None
-        login.firstname = ""
-        login.lastname = ""
-        login.username = ""
-        login.password = ""
-        login.game = ""
+        logoutUser()
 
     def currentGameScreen(self):
-        root.remove_widget(home)
-        root.add_widget(current)
-        current.getName()
+        sm.current = "Current"
 
     def createGameScreen(self):
-        root.remove_widget(home)
-        root.add_widget(create)
+        pass
+##        root.remove_widget(home)
+##        root.add_widget(create)
 
     def viewgames(self):
-        root.remove_widget(home)
-       
-        # Make sure the height is such that there is something to scroll.
-        layout.bind(minimum_height=layout.setter('height'))
-        # Run sql query to get all available games
-        availableGames = root.retrieve("SELECT * FROM Games")
-        if availableGames == "":
-            popup = Popup(title='No Games', content=Label(text='There are currently no available games'), size_hint=(None, None), size=(400, 100))
-            popup.open()
-        elif availableGames == 0:
-            popup = Popup(title='Connection', content=Label(text='Could not connect to the database'), size_hint=(None, None), size=(400, 100))
-            popup.open()
-        else:
-            for tpl in availableGames:
-                uid, name, location = tpl
-                btn = Button(text=name, size_hint_y=None, height=40)
-                layout.add_widget(btn)
-
-        sview.add_widget(layout)
-        root.add_widget(sview)
-        root.add_widget(games)
+        pass
+##        root.remove_widget(home)
+##       
+##        # Make sure the height is such that there is something to scroll.
+##        layout.bind(minimum_height=layout.setter('height'))
+##        # Run sql query to get all available games
+##        availableGames = root.retrieve("SELECT * FROM Games")
+##        if availableGames == "":
+##            popup = Popup(title='No Games', content=Label(text='There are currently no available games'), size_hint=(None, None), size=(400, 100))
+##            popup.open()
+##        elif availableGames == 0:
+##            popup = Popup(title='Connection', content=Label(text='Could not connect to the database'), size_hint=(None, None), size=(400, 100))
+##            popup.open()
+##        else:
+##            for tpl in availableGames:
+##                uid, name, location = tpl
+##                btn = Button(text=name, size_hint_y=None, height=40)
+##                layout.add_widget(btn)
+##
+##        sview.add_widget(layout)
+##        root.add_widget(sview)
+##        root.add_widget(games)
 
 #######################################################################################
 # NewUserScreen Widget
@@ -207,6 +206,8 @@ class LoginScreen(Screen, FloatLayout):
                                         uid, firstname, lastname, username, password, game, bt_ID = query[0]
                                         bt_ID = myBTA.getAddress()
                                         results = create("UPDATE users SET bt_ID = '%s' WHERE uid = '%s'" % (bt_ID, uid))
+                                        uname.text = ""
+                                        pword.text = ""
                                         sm.current = "Home"
                         else:
                                 popup = Popup(title='Invalid Credentials', content=Label(text='Please Enter a Password'), size_hint=(None, None), size=(400, 100))
@@ -290,6 +291,15 @@ def update (sql):
             print(err)
             return(0)
 
+def logoutUser():
+    uid = ""
+    firstName = ""
+    lastName = ""
+    username = ""
+    gameID = ""
+    bt_ID = ""
+    sm.current = "Login"
+
 
 
 #########################################################################
@@ -299,13 +309,14 @@ sm = ScreenManager()
 sm.add_widget(LoginScreen(name='Login'))
 sm.add_widget(NewUserScreen(name='NewUser'))
 sm.add_widget(UsersHomeScreen(name='Home'))
+sm.add_widget(CurrentGameScreen(name='Current'))
 
 #########################################################################
 # Variables
 ######################################################################### 
 sview = ScrollView(size_hint=(None, None), size=(400, 400))
 layout = GridLayout(cols=1, spacing=10, size_hint_y=None)
-ip = '192.168.1.6'
+ip = '192.168.1.116'
 
 #########################################################################
 # Bluetooth

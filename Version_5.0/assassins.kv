@@ -7,7 +7,11 @@
             source:'pictures/creed.png'
             size: self.width / 1,  self.height / 2
             pos: 0, 450
-
+<Label>:
+    color: .75,.75,.75, 1
+    font_size:50
+    bold:True
+    
 <LoginScreen>:
     GridLayout:
         pos_hint:{'center_x':.5, 'center_y':.6}
@@ -18,14 +22,11 @@
         Label:
             text:'Username'
             size_hint_y:.2
-            rgba: 192, 192, 192, .9
-            font_size: 50
         TextInput:
             id:uname_input
         Label:
             text:'Password'
             size_hint_y:.2
-            rgba: 192, 192, 192, .9
         TextInput:
             id:pass_input
             password: True
@@ -109,31 +110,35 @@
         on_press:root.goback()
 
 <CurrentGame>:
-    Label
-        id:currentgame_label
-        text: 'Current Game'
-        pos_hint:{'center_x':.5, 'center_y':.95}
-    Button:
-        text:'Back'
-        pos_hint:{'center_x':.15, 'center_y':.95}
-        size_hint: .1, .15
-        color: 0,0,0,1
-        background_color: 192, 192, 192, .6
-        on_press:root.goback()
-    Button:
-        id: kill_button
-        background_normal: "red_button-1979px.png"
-        pos_hint: { 'x': .25, 'y': .25 }
-        size_hint_y: .4
-        size_hint_x: .5
+    GridLayout:
+        
 
-	Label:
-		id:players_remaining
-		text: 'Players Remaining: '
-		font_size: 30
-		pos_hint: { 'x': .5, 'y': .06 }
-		size_hint_y: .1
-		size_hint_x: .2
+    
+##    Label
+##        id:currentgame_label
+##        text: 'Current Game'
+##        pos_hint:{'center_x':.5, 'center_y':.95}
+##    Button:
+##        text:'Back'
+##        pos_hint:{'center_x':.15, 'center_y':.95}
+##        size_hint: .1, .15
+##        color: 0,0,0,1
+##        background_color: 192, 192, 192, .6
+##        on_press:root.goback()
+##    Button:
+##        id: kill_button
+##        background_normal: "red_button-1979px.png"
+##        pos_hint: { 'x': .25, 'y': .25 }
+##        size_hint_y: .4
+##        size_hint_x: .5
+##
+##	Label:
+##		id:players_remaining
+##		text: 'Players Remaining: '
+##		font_size: 30
+##		pos_hint: { 'x': .5, 'y': .06 }
+##		size_hint_y: .1
+##		size_hint_x: .2
 
 <CreateGame>:
     Label
