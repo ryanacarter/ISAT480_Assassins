@@ -66,6 +66,21 @@
         Button:
             text:'Get Started'
             on_press:root.GetStarted()
+            
+<EliminatedScreen>:
+    Button:
+        text:'Back'
+        pos_hint:{'center_x':.15, 'center_y':.95}
+        size_hint: .3, .15
+        color: 0,0,0,1
+        background_color: 192, 192, 192, .6
+        on_press:root.goback()
+    Label:
+        pos_hint:{'center_x':.5, 'center_y':.5}
+        text:'You have been eliminated'
+    Button:
+        id:leave_game_but
+        pos_hint:{'center_x':.5, 'center_y':.1}
 
 <UsersHomeScreen>:
     Label:
@@ -104,7 +119,7 @@
     Button:
         text:'Back'
         pos_hint:{'center_x':.15, 'center_y':.95}
-        size_hint: .1, .15
+        size_hint: .3, .15
         color: 0,0,0,1
         background_color: 192, 192, 192, .6
         on_press:root.goback()
@@ -112,7 +127,38 @@
 <CurrentGame>:
     GridLayout:
         
-
+<CreateGameScreen>:
+    Label
+        id:creategame_label
+        text: 'Create Game'
+        pos_hint:{'center_x':.5, 'center_y':.95}
+    Button:
+        text:'Back'
+        pos_hint:{'center_x':.15, 'center_y':.95}
+        size_hint: .3, .15
+        color: 0,0,0,1
+        background_color: 192, 192, 192, .6
+        on_press:root.clear()
+        on_release:root.goback()
+    GridLayout:
+        pos_hint:{'center_x':.5, 'center_y':.5}
+        row_default_height: 5
+        size_hint: .9, .4
+        cols:2
+        Label:
+            text:'Name'
+        TextInput:
+            id:name_input
+        Label:
+            text:'Location'
+        TextInput:
+            id:location_input
+        Button:
+            text:'Clear'
+            on_press: root.clear()
+        Button:
+            text:'Create'
+            on_press:root.createGame()
     
 ##    Label
 ##        id:currentgame_label
@@ -140,38 +186,6 @@
 ##		size_hint_y: .1
 ##		size_hint_x: .2
 
-<CreateGame>:
-    Label
-        id:creategame_label
-        text: 'Create Game'
-        pos_hint:{'center_x':.5, 'center_y':.95}
-    Button:
-        text:'Back'
-        pos_hint:{'center_x':.15, 'center_y':.95}
-        size_hint: .1, .15
-        color: 0,0,0,1
-        background_color: 192, 192, 192, .6
-        on_press:root.clear()
-        on_release:root.goback()
-    GridLayout:
-        pos_hint:{'center_x':.5, 'center_y':.5}
-        row_default_height: 5
-        size_hint: .9, .4
-        cols:2
-        Label:
-            text:'Name'
-        TextInput:
-            id:name_input
-        Label:
-            text:'Location'
-        TextInput:
-            id:location_input
-        Button:
-            text:'Clear'
-            on_press: root.clear()
-        Button:
-            text:'Create'
-            on_press:root.createGame()
 
 <GameInfo>:
     Label
