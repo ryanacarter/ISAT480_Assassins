@@ -1,5 +1,4 @@
-Assassins App
-Version 6.0
+Assassins App Version 6.0
 =================
 
 
