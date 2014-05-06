@@ -1,6 +1,6 @@
-Assassins App Version 6.0
+Assassins Version 6.0
 =================
-
+ISAT 480 Mobile App Development
 
 05/05/2014
 
