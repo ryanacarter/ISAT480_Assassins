@@ -11,10 +11,6 @@
     color: .75,.75,.75, 1
     font_size:50
     bold:True
-
-<Button>:
-    color: 0,0,0,.8
-    background_color: 192,192,192,.6
     
 <LoginScreen>:
     GridLayout:
@@ -108,19 +104,22 @@
     Button:
         text:'Back'
         pos_hint:{'center_x':.15, 'center_y':.95}
-        size_hint: .3, .06
+        size_hint: .1, .15
         color: 0,0,0,1
         background_color: 192, 192, 192, .6
         on_press:root.goback()
 
-<GameInfoScreen>:
-    Button:
-        text:'Back'
-        pos_hint:{'center_x':.15, 'center_y':.95}
-        size_hint: .3, .06
-        color: 0,0,0,1
-        background_color: 192, 192, 192, .6
-        on_press:root.goback()
+    ScrollView:
+        id:sview
+        size_hint_x: None
+        size_hint_y: None
+
+        GridLayout:
+            id:sv_layout
+            cols: 1
+            spacing: 10
+            size_hint_y: None
+            
 
 <CurrentGame>:
     GridLayout:

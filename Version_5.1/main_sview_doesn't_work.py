@@ -18,7 +18,6 @@ from android.broadcast import BroadcastReceiver
 
 Builder.load_file('assassins.kv')
 
-ip = '192.168.1.6'
 #########################################################################
 # User Information --Logged IN
 ######################################################################### 
@@ -91,15 +90,13 @@ class CurrentGameScreen(Screen, FloatLayout):
 class AllGames(Screen, FloatLayout):
         def __init__ (self, *args, **kwargs):
             super(AllGames, self).__init__(*args, **kwargs)
-            self.viewGames()
-
-        def viewGames(self):
-            sview = ScrollView(size_hint=(.9, .8), pos_hint={'center_x':.5, 'center_y':.5})
-            layout = GridLayout(cols=1, spacing=10, size_hint_y=None)
+            
+        def viewgames(self):
+           
             # Make sure the height is such that there is something to scroll.
             layout.bind(minimum_height=layout.setter('height'))
             # Run sql query to get all available games
-            availableGames = retrieve("SELECT * FROM Games")
+            availableGames = root.retrieve("SELECT * FROM Games")
             
             if availableGames == "":
                 popup = Popup(title='No Games', content=Label(text='There are currently no available games'), size_hint=(None, None), size=(400, 100))
@@ -110,31 +107,18 @@ class AllGames(Screen, FloatLayout):
             else:
                 for tpl in availableGames:
                     uid, name, location, creator, status = tpl
-                    print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\n\n"
-                    print name
-                    print "\n\n\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\n\n"
-                    btn = Button(id=name, text=name, size_hint_y=None, height=200)
-                    btn.bind(on_press=self.seeInfo)
+                    btn = Button(text=name, size_hint_y=None, height=40)
                     layout.add_widget(btn)
 
             sview.add_widget(layout)
-            self.add_widget(sview)
+            self.add_widget(sview)            
             
 	def goback(self):
             sm.current = "Home"
-
-        def seeInfo(self, args):
-            sm.current = "GameInfoScreen"
-#######################################################################################
-# GameInfoScreen Widget
-#######################################################################################
-class GameInfoScreen(Screen, FloatLayout):
-    def __init__ (self, *args, **kwargs):
-        super(GameInfoScreen, self).__init__(*args, **kwargs)
-
-    def goback(self):
-        sm.current = "AllGames"
-
+                #layout.clear_widgets()
+                #sview.remove_widget(layout)
+                #root.clear_widgets()
+                #root.add_widget(home)
 
 #######################################################################################
 # UserHomeScreen Widget
@@ -155,10 +139,6 @@ class UsersHomeScreen(Screen, FloatLayout):
 ##        root.add_widget(create)
 
     def viewgames(self):
-        sm.get_screen("AllGames").clear_widgets()
-        sm.get_screen("AllGames").__init__()
-        #newAG = AllGames().__init__()
-        #sm.add_widget(AllGames(name='newAG'))
         sm.current = "AllGames"
 ##        root.remove_widget(home)
 ##       
@@ -362,13 +342,12 @@ sm.add_widget(UsersHomeScreen(name='Home'))
 sm.add_widget(CurrentGameScreen(name='Current'))
 sm.add_widget(CreateGameScreen(name="Create"))
 sm.add_widget(AllGames(name='AllGames'))
-sm.add_widget(GameInfoScreen(name='GameInfoScreen'))
 
 #########################################################################
 # Variables
 ######################################################################### 
-#sview = ScrollView(size_hint=(None, None), size=(400, 400))
-#layout = GridLayout(cols=1, spacing=10, size_hint_y=None)
+sview = AllGames.ids['sview']
+layout = AllGames.ids['sv_layout']
 ip = '192.168.1.6'
 
 #########################################################################
