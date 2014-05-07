@@ -17,7 +17,7 @@ from jnius import cast
 from android.broadcast import BroadcastReceiver
 
 Builder.load_file('assassins.kv')
-
+ip = '192.168.1.6'
 #########################################################################
 # User Oject to hold all of the Users information
 #########################################################################
@@ -69,45 +69,22 @@ class CreateGameScreen(Screen, FloatLayout):
                 popup = Popup(title='Sorry :(', content=Label(text='Didnt connect'), size_hint=(None, None), size=(400, 100))
                 self.clear()
                 popup.open()
-    
 
-##class CreateGame(FloatLayout):
-##        def goback(self):
-##                root.remove_widget(create)
-##                root.add_widget(home)
-##        
-##        def clear(self):
-##            self.ids['name_input'].text = ""
-##            self.ids['location_input'].text = ""
-##
-##        def createGame(self):
-##            name = self.ids['name_input'].text
-##            location = self.ids['location_input'].text
-##
-##            if name == "" or location == "":
-##                popup = Popup(title='Error', content=Label(text='Please enter values'), size_hint=(None, None), size=(400, 100))
-##                popup.open()
-##            else:
-##                results = root.create("INSERT INTO Games (name, location) VALUES ('%s','%s')" % (name,location))
-##
-##                if results == 1:
-##                        popup = Popup(title='Congratulations', content=Label(text='Thank you, game created'), size_hint=(None, None), size=(400, 100))
-##                        create.clear()
-##                        popup.open()
-##                elif results == 0:
-##                        popup = Popup(title='Sorry :(', content=Label(text='This game already exists.  Also, please do not include apostrophies'), size_hint=(None, None), size=(400, 100))
-##                        create.clear()
-##                        popup.open()
-##                elif results == 2:
-##                        popup = Popup(title='Sorry :(', content=Label(text='Didnt connect'), size_hint=(None, None), size=(400, 100))
-##                        create.clear()
-##                        popup.open()
-##
+#######################################################################################
+# EliminatedScreen Widget
+#######################################################################################
 class EliminatedScreen(Screen, FloatLayout):
     def __init__ (self, *args, **kwargs):
         super(EliminatedScreen, self).__init__(*args, **kwargs)
 
     def goback(self):
+        sm.current = "Home"
+
+    def leaveGame(self):
+        update("UPDATE users SET status = '%i', game_id = '%s' WHERE uid = '%s'" % (0, "", user.uid))
+        popup = Popup(title='Notification', content=Label(text='Your have left the game'), size_hint=(.9, .3), size=(800, 800))
+        popup.open()
+        updateUser()
         sm.current = "Home"
 
 #######################################################################################
@@ -116,20 +93,109 @@ class EliminatedScreen(Screen, FloatLayout):
 class CurrentGameScreen(Screen, FloatLayout):
     def __init__ (self, *args, **kwargs):
         super(CurrentGameScreen, self).__init__(*args, **kwargs)
+        self.eliminate = self.ids['eliminate']
+        self.status = self.ids['status']
+        self.eliminate.disabled = True
+        self.BluetoothAdapter = autoclass('android.bluetooth.BluetoothAdapter')
+        self.BluetoothDevice = autoclass('android.bluetooth.BluetoothDevice')
+        self.BluetoothSocket = autoclass('android.bluetooth.BluetoothSocket')
+        self.UUID = autoclass('java.util.UUID')
+        self.Bundle = autoclass('android.os.Bundle')
+        self.Intent = autoclass('android.content.Intent')
+        self.IntentFilter = autoclass('android.content.IntentFilter')
+        self.Context = autoclass('android.content.Context')
+        self.Toast = autoclass('android.widget.Toast')
+        self.PythonActivity = autoclass('org.renpy.android.PythonActivity')
+
+        self.myBTA = self.BluetoothAdapter.getDefaultAdapter()
+        self.popup = Popup(title='Notification', content=Label(text='Searching For Target. . .'), size_hint=(.9, .3), size=(800, 800))
+        self.popup1 = Popup(title='Notification', content=Label(text='Target Found!'), size_hint=(.9, .3), size=(800, 800))
+
 
     def goback(self):
         sm.current = "Home"
 
+    def findTarget(self):
+        self.popup.open()
+        self.br = BroadcastReceiver(self.onReceive, actions=['main'], myFilter = self.BluetoothDevice.ACTION_FOUND)
+        self.br.start()
+        self.myBTA.startDiscovery()
+
+    def onReceive(self, context, intent):
+        action = intent.getAction();
+        if (self.BluetoothDevice.ACTION_FOUND == action):
+            extras = intent.getParcelableExtra(self.BluetoothDevice.EXTRA_DEVICE)
+            device = cast('android.bluetooth.BluetoothDevice', extras)
+            deviceName = device.getAddress()
+            if deviceName == user.target:
+                self.eliminate.disabled = False
+                self.eliminate.color = (1,0,0,1)
+                self.popup.dismiss()
+                self.popup1.open()
+                self.br.stop()
+
+    def eliminateUser(self):
+        query = retrieve("SELECT target FROM users WHERE bt_ID = '%s'" % (user.target))
+        update("UPDATE users SET target = '',status = '0' WHERE bt_ID = '%s'" % (user.target))
+        user.target = query[0]
+        print user.target, '**************************************'
+        create("UPDATE users SET target = '%s' WHERE uid = '%s'" % (user.target, user.uid))
+        updateUser()
+        query1 = retrieve("SELECT firstname,lastname FROM users WHERE bt_ID = '%s'" % (user.target))
+        tfirstname, tlastname = query1[0]
+        self.status.text = str("Your Current Target is %s %s" % (tfirstname, tlastname))
+        
 
 #######################################################################################
 # AllGamesScreen Widget
 #######################################################################################
-class AllGames(FloatLayout):
+class AllGames(Screen, FloatLayout):
+        def __init__ (self, *args, **kwargs):
+            super(AllGames, self).__init__(*args, **kwargs)
+            self.viewGames()
+
+        def viewGames(self):
+            sview = ScrollView(size_hint=(.9, .8), pos_hint={'center_x':.5, 'center_y':.5})
+            layout = GridLayout(cols=1, spacing=10, size_hint_y=None)
+            # Make sure the height is such that there is something to scroll.
+            layout.bind(minimum_height=layout.setter('height'))
+            # Run sql query to get all available games
+            availableGames = retrieve("SELECT * FROM Games")
+            
+            if availableGames == "":
+                popup = Popup(title='No Games', content=Label(text='There are currently no available games'), size_hint=(None, None), size=(400, 100))
+                popup.open()
+            elif availableGames == 0:
+                popup = Popup(title='Connection', content=Label(text='Could not connect to the database'), size_hint=(None, None), size=(400, 100))
+                popup.open()
+            else:
+                for tpl in availableGames:
+                    uid, name, location, creator, status = tpl
+                    print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\n\n"
+                    print name
+                    print "\n\n\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\n\n"
+                    btn = Button(id=name, text=name, size_hint_y=None, height=200)
+                    btn.bind(on_press=self.seeInfo)
+                    layout.add_widget(btn)
+
+            sview.add_widget(layout)
+            self.add_widget(sview)
+            
 	def goback(self):
-                layout.clear_widgets()
-                sview.remove_widget(layout)
-                root.clear_widgets()
-                root.add_widget(home)
+            sm.current = "Home"
+
+        def seeInfo(self, args):
+            sm.current = "GameInfoScreen"
+            
+#######################################################################################
+# GameInfoScreen Widget
+#######################################################################################
+class GameInfoScreen(Screen, FloatLayout):
+    def __init__ (self, *args, **kwargs):
+        super(GameInfoScreen, self).__init__(*args, **kwargs)
+
+    def goback(self):
+        sm.current = "AllGames"
 
 #######################################################################################
 # UserHomeScreen Widget
@@ -142,22 +208,29 @@ class UsersHomeScreen(Screen, FloatLayout):
         logoutUser()
 
     def currentGameScreen(self):
-        print "i am here    -> " , user.game_id 
+        updateUser()
+        tfirstname = ""
+        tlastname = ""
         if (user.game_id == 0):
             popup = Popup(title='Notification', content=Label(text='Please Select a game from \nthe All Games Button'), size_hint=(.9, .3), size=(800, 800))
             popup.open()
         elif (user.status == 0):
             sm.current = "Eliminated"
         else:
+            query = retrieve("SELECT firstname, lastname FROM users WHERE bt_ID = \"%s\"" % (user.target))
+            tfirstname, tlastname = query[0]
+            sm.get_screen("Current").status.text = str("Your Current Target is %s %s" % (tfirstname, tlastname))
             sm.current = "Current"
 
     def createGameScreen(self):
         sm.current = "Create"
-##        root.remove_widget(home)
-##        root.add_widget(create)
 
     def viewgames(self):
-        pass
+        sm.get_screen("AllGames").clear_widgets()
+        sm.get_screen("AllGames").__init__()
+        sm.current = "AllGames"
+        
+##        root.remove_widget(home)sm.get
 ##        root.remove_widget(home)
 ##       
 ##        # Make sure the height is such that there is something to scroll.
@@ -348,7 +421,11 @@ def logoutUser():
     user.target = ""
     sm.current = "Login"
 
-
+def updateUser():
+    print "**********", user.game_id
+    query = retrieve("SELECT * FROM users WHERE uid = \"%s\"" % (user.uid))
+    user.uid, user.firstname, user.lastname, user.username, user.password, user.game_id, user.bt_ID, user.status, user.target = query[0]
+    print "**********", user.game_id
 
 #########################################################################
 # Screen Manager
@@ -360,13 +437,15 @@ sm.add_widget(UsersHomeScreen(name='Home'))
 sm.add_widget(CurrentGameScreen(name='Current'))
 sm.add_widget(EliminatedScreen(name='Eliminated'))
 sm.add_widget(CreateGameScreen(name='Create'))
+sm.add_widget(AllGames(name='AllGames'))
+sm.add_widget(GameInfoScreen(name='GameInfoScreen'))
+
 
 #########################################################################
 # Variables
 ######################################################################### 
 sview = ScrollView(size_hint=(None, None), size=(400, 400))
 layout = GridLayout(cols=1, spacing=10, size_hint_y=None)
-ip = '192.168.1.6'
 
 #########################################################################
 # Bluetooth

@@ -8,9 +8,13 @@
             size: self.width / 1,  self.height / 2
             pos: 0, 450
 <Label>:
-    color: .75,.75,.75, 1
+    color: 0,0,0, .8
     font_size:50
     bold:True
+    
+<Button>:
+    color: 0,0,0,.8
+    background_color: 192, 192, 192, .6
     
 <LoginScreen>:
     GridLayout:
@@ -78,9 +82,14 @@
     Label:
         pos_hint:{'center_x':.5, 'center_y':.5}
         text:'You have been eliminated'
+        color: 1, 0, 0, .8
+        size_hint: .3, .15
     Button:
         id:leave_game_but
+        text: "leave game"
         pos_hint:{'center_x':.5, 'center_y':.1}
+        size_hint: .8, .15
+        on_press:root.leaveGame()
 
 <UsersHomeScreen>:
     Label:
@@ -124,8 +133,33 @@
         background_color: 192, 192, 192, .6
         on_press:root.goback()
 
-<CurrentGame>:
+<CurrentGameScreen>:
+    Button:
+        text:'Back'
+        pos_hint:{'center_x':.15, 'center_y':.95}
+        size_hint: .3, .15
+        color: 0,0,0,1
+        background_color: 192, 192, 192, .6
+        on_press:root.goback()
+    Label:
+        id: status
+        text: "This is a test"
+        pos_hint:{'center_x':.5, 'center_y':.8}
     GridLayout:
+        pos_hint:{'center_x':.5, 'center_y':.4}
+        size_hint: .9, .7
+        cols:1
+        Button:
+            id:eliminate
+            text:'Eliminate'
+            on_press:root.eliminateUser()
+        Button:
+            id:find_target
+            text:'Find Target'
+            on_press:root.findTarget()
+        Button:
+            id:start
+            text:'Start the Game'
         
 <CreateGameScreen>:
     Label
@@ -186,7 +220,6 @@
 ##		size_hint_y: .1
 ##		size_hint_x: .2
 
-
 <GameInfo>:
     Label
         id:gameinfo_label
@@ -200,3 +233,21 @@
         background_color: 192, 192, 192, .6
         on_press:root.clear()
         on_release:root.goback()
+
+<AllGames>:
+    Button:
+        text:'Back'
+        pos_hint:{'center_x':.15, 'center_y':.95}
+        size_hint: .3, .06
+        color: 0,0,0,1
+        background_color: 192, 192, 192, .6
+        on_press:root.goback()
+
+<GameInfoScreen>:
+    Button:
+        text:'Back'
+        pos_hint:{'center_x':.15, 'center_y':.95}
+        size_hint: .3, .06
+        color: 0,0,0,1
+        background_color: 192, 192, 192, .6
+        on_press:root.goback()
